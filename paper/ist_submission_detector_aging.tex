@@ -75,11 +75,9 @@ Full-dataset CodeBERT and
 LineVul runs further show that threshold rules matter: on recovered-date
 DiverseVul, AUROC is moderate (0.724 and 0.696) but AUPRC is low (0.149 and
 0.124), and the fixed-FPR threshold rule can collapse recall to nearly zero.
-Fuller PrimeVul-paired neural sensitivity runs with five requested epochs,
-class-balanced loss, retained training curves, and all eligible recovered-date
-rows show validation AUPRC 0.573 for CodeBERT and 0.554 for LineVul; the
-selected future recall/FPR tradeoffs remain weak, again emphasizing
-operating-point diagnostics over headline recall.
+On PrimeVul-paired, CodeBERT and LineVul reach validation AUPRC 0.57 and 0.55
+under tuned fine-tuning, but selected-threshold future-project recall remains
+weak.
 The results support a precise thesis: vulnerability-detector maintenance
 policies and threshold rules materially affect future behavior under project
 and label-distribution shift; high temporal recall alone is not evidence of
@@ -213,6 +211,11 @@ testing, but temporal FPR is high and repository-clean specificity is 0.155. \\
 Maintenance policies are operating-point choices &
 Under unseen-project CVEfixes testing, small recent update reaches recall 0.972
 with FPR 0.945; the gain is meaningful only if that alert rate is acceptable. \\
+DiverseVul C2 is a negative service-level result &
+No recovered-date DiverseVul policy reaches recall at least 0.50 while keeping
+FPR at or below 0.30. Among FPR-compliant policies, CWE-aware sliding has the
+highest recall, 0.430 at FPR 0.290; small recent update is more conservative,
+0.347 at FPR 0.195. \\
 Recovered-date DiverseVul is sensitivity evidence &
 The recovered-date subset supports temporal analysis but narrows coverage to
 37,425 post-deduplication rows and 156 projects. \\
@@ -518,7 +521,12 @@ and negative counts in the training, validation, and test windows.
 For sensitivity, we rerun CVEfixes over four cutoffs:
 2009--2015/2016/2017--2024, 2010--2016/2017/2018--2024,
 2011--2017/2018/2019--2024, and 2012--2018/2019/2020--2024. This tests whether
-the CVEfixes stability claim depends on a single temporal origin.
+the CVEfixes stability claim depends on a single temporal origin. The
+rolling-origin drift analysis uses the same four CVEfixes origins and the
+analogous recovered-date DiverseVul origins:
+2009--2014/2015/2016--2022, 2009--2015/2016/2017--2022,
+2009--2016/2017/2018--2022, and 2009--2017/2018/2019--2022, yielding 22
+DiverseVul future-year pairs.
 
 The temporal design has two variants. The ordinary temporal variant evaluates
 all examples in the future year after exact duplicate removal. This measures
@@ -636,14 +644,14 @@ intervals over yearly windows using 1,000 resamples and the 2.5th and 97.5th
 percentiles. Drift-performance links are evaluated with rolling-origin paired
 replicates rather than only one fixed origin. We reuse the four CVEfixes cutoff
 origins from the temporal sensitivity analysis and add the analogous four
-recovered-date DiverseVul origins. Each future test year under each origin
-contributes one paired row containing drift signals and recall drop from that
-origin's first future window, yielding 26 CVEfixes pairs and 22 DiverseVul
-pairs. Pearson correlations are checked with permutation tests that shuffle the
-paired performance sequence while preserving the drift series. For each
-dataset, the nine drift-signal tests are adjusted with the Holm procedure, and
-correlation intervals are reported with Fisher's $z$-transform. The tests are
-interpreted as associations, not causality. For neural
+recovered-date DiverseVul origins listed in Section~5.2. Each future test year
+under each origin contributes one paired row containing drift signals and recall
+drop from that origin's first future window, yielding 26 CVEfixes pairs and 22
+DiverseVul pairs. Pearson correlations are checked with permutation tests that
+shuffle the paired performance sequence while preserving the drift series. For
+each dataset, the nine drift-signal tests are adjusted with the Holm procedure,
+and correlation intervals are reported with Fisher's $z$-transform. The tests
+are interpreted as associations, not causality. For neural
 operating-point analysis, AUROC and AUPRC summarize ranking quality, while
 threshold-specific precision, recall, F1, specificity, and FPR summarize
 deployment behavior at candidate operating points.
@@ -661,57 +669,11 @@ that all update policies help.
 
 \section{Results}
 
-\begin{table*}
-\centering
-\caption{Results at a glance.}
-\label{tab:main-findings}
-\small
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{p{0.25\textwidth}p{0.43\textwidth}p{0.22\textwidth}}
-\toprule
-Finding & Supporting evidence & Interpretation \\
-\midrule
-CVEfixes temporal recall is a pre/post-fix result, not deployment proof &
-Mean future recall is 0.882 [0.871, 0.893], worst future recall is 0.864, and
-last-year recall is not lower than first-year recall; repository-clean
-specificity is only 0.155 [0.142, 0.170]. &
-Temporal decay is not universal, and recall must be paired with clean
-specificity. \\
-Project-held-out policies change the recall/FPR tradeoff &
-On CVEfixes, project-held-out small update reaches recall 0.972 [0.948, 0.989]
-but mean FPR 0.945; on recovered-date DiverseVul, no refresh reaches recall
-0.943 [0.893, 0.976] but mean FPR 0.860. &
-Policy benefits must be reported with operating cost. \\
-Repository-clean specificity is weak for CVEfixes &
-CVEfixes-trained character model has specificity 0.155 [0.142, 0.170] on 2,500
-clean functions, 2,265 of them C/C++-family functions. &
-Fixed-code negatives do not replace independent clean evaluation. \\
-DiverseVul C2 is a negative service-level result &
-No recovered-date DiverseVul policy maintains recall at least 0.50 while
-keeping future FPR at or below 0.30; the best FPR-compliant classical policy is
-P5 CWE-aware sliding with recall 0.430 [0.276, 0.655] and FPR 0.290. &
-Maintenance policy alone does not produce an acceptable operating point in this
-regime. \\
-Neural behavior depends on operating point and training budget &
-CVEfixes CodeBERT best-F1 recall is 0.816, but FPR-controlled recall is 0.481;
-recovered-date DiverseVul neural runs have AUROC near 0.70 but near-zero
-selected-threshold recall. &
-Single-threshold neural results are incomplete; for recovered-date DiverseVul,
-the fixed-FPR threshold rule is itself a method artifact in the imbalanced
-project-held-out regime. \\
-DiverseVul date recovery materially strengthens sensitivity evidence &
-Repository-date recovery covers 37,767 raw rows and supports a recovered-date
-temporal subset, while unrecovered rows remain excluded. &
-Primary claims should distinguish recovered-date and unrecovered data. \\
-PrimeVul-paired adds a true-dated external check &
-The commit-date-recovered PrimeVul-paired run has 1,267 post-deduplication
-rows; the character model reaches mean recall 0.789 [0.675, 0.910] but mean
-FPR 0.776 [0.679, 0.891]. &
-It strengthens external temporal validity, while the paired task still shows
-that recall must be read with FPR. \\
-\bottomrule
-\end{tabular}
-\end{table*}
+Table~\ref{tab:intro-findings} is the reader's summary anchor. The results
+below provide the detailed evidence behind those findings: fixed-origin temporal
+behavior and cutoff sensitivity, project-held-out policy tradeoffs,
+repository-clean specificity, neural operating-point diagnostics, rolling-origin
+drift correlations, and ordinary-temporal maintenance summaries.
 
 \subsection{RQ1: Fixed-Origin Temporal Behavior}
 
@@ -1529,15 +1491,17 @@ Descriptive only after rolling-origin correction. \\
 
 \subsection{RQ3: Maintenance Policies}
 
-Table~\ref{tab:maintenance} reports maintenance policies for the selected
-baseline. On CVEfixes, all refresh policies improve recall over no refresh, but
-they also operate at high false-positive rates. The small recent update policy
-reaches mean recall 0.961 at mean FPR 0.928 while using 40 recent labels per
-future window. On recovered-date DiverseVul, fixed-origin evaluation has higher
-recall than retraining variants, whereas small recent update has lower recall
-0.295 but lower FPR 0.137. This negative result is important for the maintenance
-framing: update policies are interventions whose benefits depend on the future
-distribution and the operating objective.
+Table~\ref{tab:maintenance} reports the ordinary-temporal maintenance
+experiment, whereas Table~\ref{tab:project-maintenance} reports the stricter
+project-held-out version. The recall values therefore differ by design. On
+CVEfixes, all ordinary-temporal refresh policies improve recall over no refresh,
+but they also operate at high false-positive rates. The small recent update
+policy reaches mean recall 0.961 at mean FPR 0.928 while using 40 recent labels
+per future window. On recovered-date DiverseVul, fixed-origin evaluation has
+higher recall than retraining variants, whereas small recent update has lower
+recall 0.295 but lower FPR 0.137. This negative result is important for the
+maintenance framing: update policies are interventions whose benefits depend on
+the future distribution and the operating objective.
 
 \begin{table*}
 \centering
