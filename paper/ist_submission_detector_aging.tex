@@ -950,7 +950,8 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       xlabel={Mean newly labeled samples per future window},
       ylabel={Mean recall},
       yticklabel=\empty,
-      legend style={at={(0.98,0.98)},anchor=north east,font=\small},
+      legend style={at={(0.5,-0.24)},anchor=north,font=\small},
+      legend columns=1,
       grid=major
     ]
       \addplot[name path=cvepolicycostupper,draw=none,forget plot] coordinates {
@@ -995,7 +996,8 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       yticklabel=\empty,
       xtick={1,2},
       xticklabels={CVEfixes,DiverseVul recovered},
-      legend style={at={(0.02,0.98)},anchor=north west,font=\small},
+      legend style={at={(0.5,-0.24)},anchor=north,font=\small},
+      legend columns=1,
       grid=major
     ]
       \addplot[name path=ordinaryupper,draw=none,forget plot] coordinates {
@@ -1038,7 +1040,8 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       ymin=0.20,
       ymax=1.00,
       xtick={2017,2018,2019,2020,2021,2022,2023,2024},
-      legend style={at={(0.02,0.03)},anchor=south west,font=\small},
+      legend style={at={(0.5,-0.24)},anchor=north,font=\small},
+      legend columns=2,
       grid=both
     ]
       \addplot[name path=cvecharupper,draw=none,forget plot] coordinates {
@@ -1222,7 +1225,8 @@ DiverseVul recovered & LineVul full FT & 0.696 & 0.124 & 1.000/1.000 & 0.021/0.0
       xlabel={False-positive rate},
       ylabel={Recall},
       yticklabel=\empty,
-      legend style={at={(0.02,0.98)},anchor=north west,font=\small},
+      legend style={at={(0.5,-0.24)},anchor=north,font=\small},
+      legend columns=2,
       grid=major
     ]
       \addplot[name path=cvebertupper,draw=none,forget plot] coordinates {
@@ -1349,7 +1353,8 @@ DiverseVul recovered & token TF-IDF LR & 2500 & 0.579 & [0.560, 0.598] & 0.421 \
       yticklabel=\empty,
       xtick={1,2,3,4},
       xticklabels={char4,metrics,frozen,tfidf},
-      legend style={at={(0.02,0.98)},anchor=north west,font=\small},
+      legend style={at={(0.5,-0.24)},anchor=north,font=\small},
+      legend columns=1,
       grid=major
     ]
       \addplot[name path=cvecleanupper,draw=none,forget plot] coordinates {
@@ -1514,7 +1519,8 @@ DiverseVul recovered & Small recent update & 0.295 & 0.180 & 0.137 & [0.208, 0.4
       xtick={1,2,3,4,5},
       xticklabels={No refresh,Cumulative,Sliding,Calibration,Small update},
       x tick label style={rotate=25,anchor=east},
-      legend style={at={(0.02,0.98)},anchor=north west,font=\small},
+      legend style={at={(0.5,-0.40)},anchor=north,font=\small},
+      legend columns=1,
       grid=major
     ]
       \addplot[name path=cvemaintupper,draw=none,forget plot] coordinates {
