@@ -1,0 +1,22 @@
+.DS_Store
+.cache/
+.venv_neural/
+__pycache__/
+*.py[cod]
+
+# Large/generated experiment artifacts. The manuscript artifact table records
+# checksums; archive these separately with DOI/release assets rather than Git.
+data/
+results/
+
+# LaTeX build products.
+paper/*.abs
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.spl
+paper/*.synctex.gz
