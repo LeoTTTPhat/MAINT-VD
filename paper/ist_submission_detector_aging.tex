@@ -432,11 +432,7 @@ outcome.
     \draw[arrow] (cost.south) |- ++(0,-0.55) -| node[pos=0.25,below,font=\footnotesize]
       {recalibrate or update} (policy.south);
   \end{tikzpicture}
-  \caption{Visual summary of detector maintenance in MAINT-VD. A detector is
-  evaluated as a maintained artifact: historical labels define a train origin,
-  future years and unseen projects induce shift, maintenance policies and
-  threshold rules choose an operating point, and the result is judged by service
-  outcomes and costs.}
+  \caption{Visual summary of MAINT-VD detector maintenance.}
   \label{fig:maintenance-loop}
 \end{figure*}
 
@@ -494,8 +490,7 @@ PrimeVul-paired recovered dates & 2009--2022 & 1,267 & 126 & 627 & 640 & 74 \\
 
 \begin{table*}
 \centering
-\caption{DiverseVul recovered-date accounting. The final row is the fixed-origin
-temporal span used in the main recovered-date analysis.}
+\caption{DiverseVul recovered-date accounting.}
 \label{tab:diversevul-accounting}
 \small
 \begin{tabular}{lrrl}
@@ -692,9 +687,7 @@ not to assume universal monotonic decay.
 
 \begin{table*}
 \centering
-\caption{Headline temporal and independent-clean endpoints. Temporal FPR is
-computed on future pre/post-fix test windows; clean specificity and clean FPR
-are computed on the independent clean-only challenge.}
+\caption{Headline temporal and independent-clean endpoints.}
 \label{tab:aging}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -721,13 +714,13 @@ the primary character baseline. The ordinary-temporal stability claim is not an
 artifact of a single origin: mean recall ranges from 0.884 to 0.978 across four
 train/validation/test origins. The sign of first-to-last recall change varies,
 which supports the paper's narrower claim that temporal behavior is origin- and
-policy-dependent rather than monotonically aging.
+policy-dependent rather than monotonically aging. In Table~\ref{tab:cutoff-sensitivity},
+decay is first-test recall minus last-test recall, so negative values indicate
+higher recall in the last test window.
 
 \begin{table*}
 \centering
-\caption{CVEfixes temporal cutoff sensitivity for the primary character
-4-gram baseline. Decay is first-test recall minus last-test recall, so negative
-values indicate higher recall in the last test window.}
+\caption{CVEfixes cutoff sensitivity for the primary character baseline.}
 \label{tab:cutoff-sensitivity}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -755,12 +748,7 @@ independent-clean specificity.
 
 \begin{table*}
 \centering
-\caption{PrimeVul-paired recovered commit-date fixed-origin sensitivity. This
-table is external sensitivity only: PrimeVul-paired is commit-dated after
-recovering dates for 494 commit pages, but it remains a paired pre/post-fix
-task. The split is 2011--2016/2017/2018--2022 after exact-deduplication and a
-2,000-character input cap. Intervals are bootstrap 95\% CIs over future-year
-windows.}
+\caption{PrimeVul-paired recovered-date fixed-origin sensitivity.}
 \label{tab:primevul}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -786,8 +774,7 @@ operating point are part of detector maintenance.
 
 \begin{table*}
 \centering
-\caption{Cross-dataset temporal probe for the primary character model. Values
-are means over future-year windows.}
+\caption{Cross-dataset temporal probe for the primary character model.}
 \label{tab:cross-dataset}
 \small
 \setlength{\tabcolsep}{5pt}
@@ -820,9 +807,7 @@ together.
 
 \begin{table*}
 \centering
-\caption{Classical maintenance policies under unseen-project temporal testing.
-Labels/window is the mean number of newly labeled validation or update samples
-used per future window.}
+\caption{Classical maintenance policies under unseen-project temporal testing.}
 \label{tab:project-maintenance}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrr}
@@ -859,9 +844,7 @@ exact small-update budget.
 
 \begin{table*}
 \centering
-\caption{CVEfixes project-held-out small-update budget sensitivity. All rows
-use the same temporal/project split and character model; intervals are
-bootstrap 95\% CIs over annual windows.}
+\caption{CVEfixes project-held-out small-update budget sensitivity.}
 \label{tab:small-budget}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -893,11 +876,7 @@ operating point but pays higher future FPR.
 
 \begin{table*}
 \centering
-\caption{PrimeVul-paired recovered-date fuller neural diagnostic rerun with
-retained training curves. Both runs use all eligible recovered-date rows under
-future-project holdout, max length 256, class-balanced loss, five requested
-epochs, and early stopping on validation AUPRC. Intervals are bootstrap 95\%
-CIs over future-year test windows.}
+\caption{PrimeVul-paired recovered-date neural diagnostic rerun.}
 \label{tab:primevul-neural}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -941,9 +920,7 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       \addlegendentry{PrimeVul recovered LineVul}
     \end{axis}
   \end{tikzpicture}
-  \caption{Training-curve diagnostic for the PrimeVul-paired recovered-date
-  neural sensitivity. Validation AUPRC, not AUROC, is used for early stopping
-  because operating-point quality matters under future-project evaluation.}
+  \caption{PrimeVul-paired neural validation AUPRC by epoch.}
   \label{fig:primevul-training}
 \end{figure*}
 
@@ -986,11 +963,7 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       \addlegendentry{DiverseVul recovered}
     \end{axis}
   \end{tikzpicture}
-  \caption{Policy-vs-label-cost view under unseen-project temporal testing.
-  Lines show mean recall and shaded bands show bootstrap 95\% intervals over
-  annual windows. Small updates
-  are low-cost, but their value depends on the dataset and the false-positive
-  operating point.}
+  \caption{Policy-vs-label-cost view under unseen-project temporal testing.}
   \label{fig:policy-cost}
 \end{figure*}
 
@@ -1034,11 +1007,7 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       \addlegendentry{Project-held-out temporal}
     \end{axis}
   \end{tikzpicture}
-  \caption{Ordinary temporal versus project-held-out no-refresh evaluation for
-  the primary character baseline. Higher project-held-out recall does not mean
-  the examples are easier; it is coupled to a different threshold/FPR regime and
-  very high false-positive rates, so it must be reported separately from
-  ordinary chronological evaluation. Error bars are 95\% intervals.}
+  \caption{Ordinary temporal versus project-held-out no-refresh evaluation.}
   \label{fig:ordinary-project}
 \end{figure*}
 
@@ -1114,9 +1083,7 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       \addlegendentry{DiverseVul frozen emb.}
     \end{axis}
   \end{tikzpicture}
-  \caption{Fixed-origin future recall curves for the primary character model
-  and the frozen embedding baseline. Shaded bands are Wilson 95\% intervals
-  for recall computed from yearly true-positive and false-negative counts.}
+  \caption{Fixed-origin future recall curves with uncertainty bands.}
   \label{fig:aging}
 \end{figure*}
 
@@ -1166,8 +1133,7 @@ near-all-negative threshold.
 
 \begin{table*}
 \centering
-\caption{Full-dataset full-parameter fine-tuning with unseen-project temporal
-evaluation and validation FPR control.}
+\caption{Full-dataset neural fine-tuning under unseen-project temporal testing.}
 \label{tab:full-project-holdout}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -1201,14 +1167,14 @@ precision-floor rule is infeasible and falls back to precision 0.263 with
 recall 0.020 at FPR 0.004. Thus the earlier zero-recall point was a threshold
 artifact, but the rerun still shows no useful neural operating point on the
 recovered-date project-held-out split.
+In Table~\ref{tab:neural-operating}, FPR20 denotes validation-threshold
+selection with FPR at most 0.20, and PF50 denotes the best available
+precision-floor point at precision at least 0.50, falling back to the
+highest-precision non-empty point when the floor is infeasible.
 
 \begin{table*}
 \centering
-\caption{Operating-point summary for full-dataset project-held-out neural
-runs. FPR20 denotes a threshold with false-positive rate no greater than 0.20;
-PF50 denotes the best available threshold under a precision floor of 0.50, or
-the highest-precision non-empty point if the floor is infeasible. Compact
-operating-point cells report recall/FPR; PF50 reports precision/recall/FPR.}
+\caption{Operating-point summary for full-dataset project-held-out neural runs.}
 \label{tab:neural-operating}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -1288,10 +1254,7 @@ DiverseVul recovered & LineVul full FT & 0.696 & 0.124 & 1.000/1.000 & 0.021/0.0
       \addlegendentry{DiverseVul LineVul}
     \end{axis}
   \end{tikzpicture}
-  \caption{Threshold/FPR tradeoff for project-held-out neural runs. The same
-  detector can appear high-recall or conservative depending on the operating
-  point selected for deployment. Shaded bands are Wilson 95\% intervals for
-  recall at selected threshold points.}
+  \caption{Threshold/FPR tradeoff for project-held-out neural runs.}
   \label{fig:operating}
 \end{figure*}
 
@@ -1308,8 +1271,7 @@ negatives do not substitute for independently sampled clean functions.
 
 \begin{table*}
 \centering
-\caption{Grouped validity and independent-clean specificity for
-near-duplicate-controlled runs.}
+\caption{Grouped validity and independent-clean specificity.}
 \label{tab:clean}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1335,8 +1297,7 @@ strong on pre/post-fix temporal recall while flagging many clean-only functions.
 
 \begin{table*}
 \centering
-\caption{Repository-clean specificity by detector family.
-Confidence intervals are Wilson 95\% intervals for specificity.}
+\caption{Repository-clean specificity by detector family.}
 \label{tab:clean-source}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1397,16 +1358,13 @@ DiverseVul recovered & token TF-IDF LR & 2500 & 0.579 & [0.560, 0.598] & 0.421 \
       \addlegendentry{DiverseVul recovered}
     \end{axis}
   \end{tikzpicture}
-  \caption{Repository-clean specificity benchmark. Lines show specificity by
-  detector family and shaded bands are Wilson 95\% intervals computed from
-  true-negative and false-positive counts on the 2,500 clean-only functions.}
+  \caption{Repository-clean specificity benchmark.}
   \label{fig:clean-specificity}
 \end{figure*}
 
 \begin{table*}
 \centering
-\caption{Repository-clean specificity by language for the primary character
-baseline. Confidence intervals are Wilson 95\% intervals.}
+\caption{Repository-clean specificity by language.}
 \label{tab:clean-language}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1440,10 +1398,7 @@ themselves prove why performance changed.
 
 \begin{table*}
 \centering
-\caption{Rolling-origin paired drift--performance analysis for the primary
-character baseline. Each pair is one future test year under one train/validation
-origin. Correlations are between the drift signal and recall drop from that
-origin's first future window; intervals use Fisher's $z$-transform.}
+\caption{Rolling-origin paired drift--performance analysis.}
 \label{tab:rolling-drift}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1459,9 +1414,7 @@ DiverseVul recovered & CWE turnover & 22 & 0.422 & [0.001, 0.716] & 0.445 \\
 
 \begin{table*}
 \centering
-\caption{Compact statistical-output summary for the primary character
-baseline. Policy CIs are bootstrap intervals over annual windows; correlation
-CIs use Fisher's $z$-transform.}
+\caption{Compact statistical-output summary for the primary character baseline.}
 \label{tab:statistical-outputs}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrl}
@@ -1569,9 +1522,7 @@ DiverseVul recovered & Small recent update & 0.295 & 0.180 & 0.137 & [0.208, 0.4
       \addlegendentry{DiverseVul recovered}
     \end{axis}
   \end{tikzpicture}
-  \caption{Maintenance-policy mean recall for the primary character
-  baseline. Lines show policy means and shaded bands are bootstrap 95\%
-  intervals over annual windows.}
+  \caption{Maintenance-policy mean recall with bootstrap uncertainty.}
   \label{fig:maintenance}
 \end{figure*}
 
@@ -1624,8 +1575,7 @@ maintenance choices.
 
 \begin{table*}
 \centering
-\caption{Practical maintenance-policy recommendations suggested by the
-empirical results.}
+\caption{Practical maintenance-policy recommendations.}
 \label{tab:recommendations}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{p{0.22\textwidth}p{0.28\textwidth}p{0.40\textwidth}}
@@ -1659,8 +1609,7 @@ pull-request or CI volumes before selecting a service-level objective.
 
 \begin{table*}
 \centering
-\caption{Illustrative alert-cost conversion. Expected false alerts are
-\(\mathrm{FPR}\times\) the number of clean functions inspected.}
+\caption{Illustrative alert-cost conversion.}
 \label{tab:alert-cost}
 \small
 \setlength{\tabcolsep}{4pt}
@@ -1837,8 +1786,7 @@ Table~\ref{tab:artifact-manifest}.
 
 \begin{table*}
 \centering
-\caption{Artifact manifest excerpt. Full local manifest:
-\texttt{artifact\_manifest.tsv}.}
+\caption{Artifact manifest excerpt.}
 \label{tab:artifact-manifest}
 \scriptsize
 \begin{tabular}{llll}
