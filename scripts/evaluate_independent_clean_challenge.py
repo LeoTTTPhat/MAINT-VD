@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -31,6 +32,16 @@ def fit_spaces(train_rows: list[dict]) -> list[aging.FeatureSpace]:
         aging.fit_metric_space(train_rows),
         aging.fit_frozen_embedding_space(train_rows),
     ]
+
+
+def wilson_ci(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    if n == 0:
+        return (0.0, 0.0)
+    phat = successes / n
+    denom = 1 + z * z / n
+    centre = (phat + z * z / (2 * n)) / denom
+    margin = z * math.sqrt((phat * (1 - phat) + z * z / (4 * n)) / n) / denom
+    return max(0.0, centre - margin), min(1.0, centre + margin)
 
 
 def main() -> int:
@@ -81,6 +92,7 @@ def main() -> int:
     for space in fit_spaces(train_rows):
         model = aging.fit_model(space, train_rows, val_rows)
         metrics, preds = aging.evaluate_model(space, model, clean_rows)
+        lo, hi = wilson_ci(int(metrics["tn"]), int(metrics["tn"]) + int(metrics["fp"]))
         result_rows.append(
             {
                 "source_name": args.source_name,
@@ -88,6 +100,8 @@ def main() -> int:
                 "threshold": model.threshold,
                 "clean_rows": len(clean_rows),
                 "specificity": metrics["specificity"],
+                "specificity_ci_low": lo,
+                "specificity_ci_high": hi,
                 "false_positive_rate": metrics["false_positive_rate"],
                 "accuracy": metrics["accuracy"],
                 "fp": metrics["fp"],

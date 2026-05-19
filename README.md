@@ -17,6 +17,10 @@ The goal is not to provide a new detector leaderboard. The repository instead
 documents how maintenance policies, threshold rules, temporal metadata, label
 cost, and false-positive cost affect future detector behavior.
 
+Recent additions include rolling-origin drift/performance replicates, an
+expanded C/C++-majority repository-clean benchmark, and a CWE-aware sliding
+maintenance policy.
+
 ## Repository Layout
 
 - `paper/`: IST manuscript source, references, and generated PDF.
@@ -59,6 +63,8 @@ The pipeline scripts are designed to be run from the repository root. Examples:
 ```bash
 python3 scripts/conduct_detector_aging.py --help
 python3 scripts/run_project_heldout_classical_policies.py --help
+python3 scripts/rolling_origin_drift_performance.py --help
+python3 scripts/create_repo_clean_benchmark.py --help
 python3 scripts/run_cross_dataset_classical_probe.py --help
 python3 scripts/finetune_transformer_temporal.py --help
 ```

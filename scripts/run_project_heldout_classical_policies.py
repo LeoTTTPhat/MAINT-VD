@@ -25,8 +25,13 @@ def write_csv(path: Path, rows: list[dict]) -> None:
     if not rows:
         path.write_text("", encoding="utf-8")
         return
+    fieldnames = list(rows[0].keys())
+    for row in rows[1:]:
+        for key in row:
+            if key not in fieldnames:
+                fieldnames.append(key)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
 
@@ -70,6 +75,45 @@ def sample_rows(rows: list[dict], limit: int, seed: int) -> list[dict]:
         selected.extend(rng.sample(rest, min(len(rest), limit - len(selected))))
     selected.sort(key=lambda row: (int(row["year"]), str(row["idx"])))
     return selected
+
+
+def cwe_aware_training_rows(
+    reference_rows: list[dict],
+    validation_rows: list[dict],
+    limit: int,
+    top_k: int,
+    boost: int,
+    seed: int,
+) -> tuple[list[dict], str]:
+    base_rows = sample_rows(reference_rows, limit, seed)
+    if not validation_rows or boost <= 1:
+        return base_rows, ""
+
+    reference_counts: dict[str, int] = {}
+    validation_counts: dict[str, int] = {}
+    for row in reference_rows:
+        cwe = str(row.get("cwe", "unknown"))
+        reference_counts[cwe] = reference_counts.get(cwe, 0) + 1
+    for row in validation_rows:
+        if int(row["target"]) == 1:
+            cwe = str(row.get("cwe", "unknown"))
+            validation_counts[cwe] = validation_counts.get(cwe, 0) + 1
+    if not validation_counts:
+        return base_rows, ""
+
+    total_reference = max(1, sum(reference_counts.values()))
+    total_validation = max(1, sum(validation_counts.values()))
+    shifted = sorted(
+        validation_counts,
+        key=lambda cwe: (validation_counts[cwe] / total_validation) - (reference_counts.get(cwe, 0) / total_reference),
+        reverse=True,
+    )[:top_k]
+    shifted_set = set(shifted)
+    boosted = list(base_rows)
+    for row in base_rows:
+        if str(row.get("cwe", "unknown")) in shifted_set:
+            boosted.extend([row] * (boost - 1))
+    return boosted, "|".join(shifted)
 
 
 def choose_fallback_validation(windows: dict, train_projects: set[str], candidate_year: int) -> list[dict]:
@@ -221,6 +265,33 @@ def run(args: argparse.Namespace) -> dict:
                 )
             )
 
+        if sliding_years:
+            reference_rows = aging.rows_for_years(windows, sliding_years)
+            reference_projects = {row["project"] for row in reference_rows}
+            validation_rows = choose_fallback_validation(windows, reference_projects, previous_year)
+            train_rows, shifted_cwes = cwe_aware_training_rows(
+                reference_rows,
+                validation_rows,
+                args.max_policy_train_rows,
+                args.cwe_aware_top_k,
+                args.cwe_aware_boost,
+                args.seed + year * 10 + 5,
+            )
+            test_rows = filter_unseen_projects(windows["by_year"][year], reference_projects)
+            if test_rows:
+                policy_row = evaluate_policy(
+                    "P5_cwe_aware_sliding",
+                    sliding_years,
+                    previous_year,
+                    len(validation_rows),
+                    train_rows,
+                    validation_rows,
+                    test_rows,
+                    args.primary_model,
+                )
+                policy_row["shifted_cwes"] = shifted_cwes
+                results.append(policy_row)
+
     summary = []
     for policy in sorted({row["policy"] for row in results}):
         policy_rows = [row for row in results if row["policy"] == policy]
@@ -285,6 +356,8 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=29)
     parser.add_argument("--logreg-epochs", type=int, default=80)
     parser.add_argument("--max-policy-train-rows", type=int, default=6000)
+    parser.add_argument("--cwe-aware-top-k", type=int, default=5)
+    parser.add_argument("--cwe-aware-boost", type=int, default=3)
     args = parser.parse_args()
     print(json.dumps(run(args), indent=2))
     return 0

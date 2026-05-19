@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 from collections import defaultdict
+import math
 
 
 def read_jsonl(path: Path) -> list[dict]:
@@ -47,6 +48,16 @@ def infer_language(code: str, project: str) -> str:
     return "unknown"
 
 
+def wilson_ci(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    if n == 0:
+        return (0.0, 0.0)
+    phat = successes / n
+    denom = 1 + z * z / n
+    centre = (phat + z * z / (2 * n)) / denom
+    margin = z * math.sqrt((phat * (1 - phat) + z * z / (4 * n)) / n) / denom
+    return max(0.0, centre - margin), min(1.0, centre + margin)
+
+
 def summarize(joined: list[dict], group_key: str) -> list[dict]:
     groups = defaultdict(list)
     for row in joined:
@@ -57,6 +68,7 @@ def summarize(joined: list[dict], group_key: str) -> list[dict]:
             subset = [r for r in rows if r["model"] == model]
             fp = sum(int(r["pred"]) for r in subset)
             tn = len(subset) - fp
+            lo, hi = wilson_ci(tn, len(subset))
             out.append(
                 {
                     "group_type": group_key,
@@ -64,6 +76,8 @@ def summarize(joined: list[dict], group_key: str) -> list[dict]:
                     "model": model,
                     "rows": len(subset),
                     "specificity": tn / len(subset) if subset else 0.0,
+                    "specificity_ci_low": lo,
+                    "specificity_ci_high": hi,
                     "false_positive_rate": fp / len(subset) if subset else 0.0,
                     "fp": fp,
                     "tn": tn,
@@ -92,7 +106,7 @@ def main() -> int:
                 **pred,
                 "source_dataset": str(base.get("source_dataset", "unknown")),
                 "project": project,
-                "language": infer_language(code, project),
+                "language": str(base.get("language") or infer_language(code, project)),
             }
         )
 

@@ -64,12 +64,14 @@ commit pages, yielding 1,267 post-deduplication records across 74 projects. On
 CVEfixes, the character
 4-gram
 baseline has mean future recall 0.882 [0.871, 0.893], but repository-clean
-specificity is only 0.082 [0.063, 0.106], so high pre/post-fix recall is not
+specificity is only 0.155 [0.142, 0.170], so high pre/post-fix recall is not
 evidence of arbitrary clean-code behavior. Under unseen-project temporal
 testing, a small recent-update policy reaches recall 0.972 [0.948, 0.989] but
 FPR 0.945, making the recall gain an operating-point tradeoff rather than an
 operational improvement. On recovered-date DiverseVul, the same policy
-reaches recall 0.310 [0.136, 0.481] at FPR 0.144. Full-dataset CodeBERT and
+reaches recall 0.347 [0.164, 0.522] at FPR 0.195, and no tested policy satisfies
+the C2 service level of recall \(\geq 0.50\) at FPR \(\leq 0.30\).
+Full-dataset CodeBERT and
 LineVul runs further show that threshold rules matter: on recovered-date
 DiverseVul, AUROC is moderate (0.724 and 0.696) but AUPRC is low (0.149 and
 0.124), and the fixed-FPR threshold rule can collapse recall to nearly zero.
@@ -207,7 +209,7 @@ Finding & Empirical support \\
 \midrule
 Clean specificity changes the interpretation of recall &
 The CVEfixes character model has mean future recall 0.883 in ordinary temporal
-testing, but temporal FPR is high and repository-clean specificity is 0.082. \\
+testing, but temporal FPR is high and repository-clean specificity is 0.155. \\
 Maintenance policies are operating-point choices &
 Under unseen-project CVEfixes testing, small recent update reaches recall 0.972
 with FPR 0.945; the gain is meaningful only if that alert rate is acceptable. \\
@@ -572,7 +574,12 @@ the immediately preceding year. Sliding-window retraining uses the three most
 recent eligible years before calibration. Calibration-only keeps the original
 model weights but reselects the decision threshold on recent validation data.
 Small recent update appends a bounded number of recent positive and negative
-examples to the original training set before refitting.
+examples to the original training set before refitting. We add a
+vulnerability-specific policy, CWE-aware sliding retraining, that starts from
+the three-year sliding window and oversamples weakness classes whose positive
+share has increased in the most recent labeled calibration year. The policy is
+not allowed to inspect the target test year; it uses the recent labeled year to
+adapt the update batch toward shifted CWE prevalence.
 
 Operating points are selected on validation data only. For classical aging and
 maintenance summaries, the default threshold maximizes validation F1. For the
@@ -603,19 +610,16 @@ pairs after exact deduplication, while grouped analysis reports no train-to-test
 commit-group or pair-group overlap.
 
 To test whether fixed-code negatives substitute for independently clean code,
-we construct a repository-clean benchmark from local research software projects
-outside the vulnerability-dataset construction pipeline. The extractor keeps
-Python and C-like functions, removes exact canonical overlap with CVEfixes and
-recovered-date DiverseVul, and caps per-project contribution. The resulting
-benchmark contains 634 functions from 21 project/source groups. These projects
-are not claimed to be formally defect-free; the point is narrower and stronger
-than the earlier dataset-derived stress test: the clean examples are not
-derived from vulnerability-fixing commits and do not reuse the temporal
-vulnerability datasets' negative-example construction. In the current artifact
-the repository-clean pool is Python-only: median function length is 502
-characters, mean length is 849 characters, and the 90th percentile is 1,975
-characters. This composition makes the benchmark a clean-source guardrail, not
-a complete multi-language deployment benchmark.
+we construct a repository-clean benchmark from local research software and
+external C/C++ repositories outside the vulnerability-dataset construction
+pipeline. The extractor keeps Python and C-like functions, removes exact
+canonical overlap with CVEfixes, recovered-date DiverseVul, and PrimeVul-paired,
+and caps per-project contribution. The resulting benchmark contains 2,500
+functions from 39 project/source groups: 2,265 C/C++-family functions and 235
+Python functions. These projects are not claimed to be formally defect-free; the
+point is narrower and stronger than the earlier dataset-derived stress test:
+the clean examples are not derived from vulnerability-fixing commits and do not
+reuse the temporal vulnerability datasets' negative-example construction.
 
 \subsection{Statistical Protocol}
 
@@ -629,14 +633,17 @@ mean recall, mean F1, mean FPR, and mean label cost per window.
 
 Uncertainty intervals for policy summaries are non-parametric bootstrap
 intervals over yearly windows using 1,000 resamples and the 2.5th and 97.5th
-percentiles. Drift-performance links are evaluated with Pearson correlations
-between yearly drift signals and recall drop, then checked with permutation
-tests that shuffle the yearly performance sequence while preserving the drift
-series. CVEfixes has seven annual future windows and recovered-date DiverseVul
-has six. For each dataset, the nine drift-signal tests are adjusted with the
-Holm procedure, and correlation intervals are reported with Fisher's
-$z$-transform. Because these tests share the same small set of annual windows,
-they are interpreted as evidence of association, not causality. For neural
+percentiles. Drift-performance links are evaluated with rolling-origin paired
+replicates rather than only one fixed origin. We reuse the four CVEfixes cutoff
+origins from the temporal sensitivity analysis and add the analogous four
+recovered-date DiverseVul origins. Each future test year under each origin
+contributes one paired row containing drift signals and recall drop from that
+origin's first future window, yielding 26 CVEfixes pairs and 22 DiverseVul
+pairs. Pearson correlations are checked with permutation tests that shuffle the
+paired performance sequence while preserving the drift series. For each
+dataset, the nine drift-signal tests are adjusted with the Holm procedure, and
+correlation intervals are reported with Fisher's $z$-transform. The tests are
+interpreted as associations, not causality. For neural
 operating-point analysis, AUROC and AUPRC summarize ranking quality, while
 threshold-specific precision, recall, F1, specificity, and FPR summarize
 deployment behavior at candidate operating points.
@@ -667,18 +674,24 @@ Finding & Supporting evidence & Interpretation \\
 CVEfixes temporal recall is a pre/post-fix result, not deployment proof &
 Mean future recall is 0.882 [0.871, 0.893], worst future recall is 0.864, and
 last-year recall is not lower than first-year recall; repository-clean
-specificity is only 0.082 [0.063, 0.106]. &
+specificity is only 0.155 [0.142, 0.170]. &
 Temporal decay is not universal, and recall must be paired with clean
 specificity. \\
 Project-held-out policies change the recall/FPR tradeoff &
 On CVEfixes, project-held-out small update reaches recall 0.972 [0.948, 0.989]
 but mean FPR 0.945; on recovered-date DiverseVul, no refresh reaches recall
-0.932 [0.887, 0.964] but mean FPR 0.824. &
+0.943 [0.893, 0.976] but mean FPR 0.860. &
 Policy benefits must be reported with operating cost. \\
 Repository-clean specificity is weak for CVEfixes &
-CVEfixes-trained character model has specificity 0.082 [0.063, 0.106] on 634
-functions from 21 local non-vulnerability project/source groups. &
+CVEfixes-trained character model has specificity 0.155 [0.142, 0.170] on 2,500
+clean functions, 2,265 of them C/C++-family functions. &
 Fixed-code negatives do not replace independent clean evaluation. \\
+DiverseVul C2 is a negative service-level result &
+No recovered-date DiverseVul policy maintains recall at least 0.50 while
+keeping future FPR at or below 0.30; the best FPR-compliant classical policy is
+P5 CWE-aware sliding with recall 0.430 [0.276, 0.655] and FPR 0.290. &
+Maintenance policy alone does not produce an acceptable operating point in this
+regime. \\
 Neural behavior depends on operating point and training budget &
 CVEfixes CodeBERT best-F1 recall is 0.816, but FPR-controlled recall is 0.481;
 recovered-date DiverseVul neural runs have AUROC near 0.70 but near-zero
@@ -705,12 +718,12 @@ that recall must be read with FPR. \\
 Table~\ref{tab:aging} reports fixed-origin aging summaries. CVEfixes does not
 show catastrophic aging for the primary character baseline under the
 corrected split: mean future recall is 0.882 [0.871, 0.893], but temporal FPR
-is 0.821 and independent-clean specificity is 0.082 [0.063, 0.106].
+is 0.821 and independent-clean specificity is 0.155 [0.142, 0.170].
 These are pre/post-fix detection scores and are not interpreted as arbitrary
 vulnerable-versus-clean deployment performance.
 The recovered-date DiverseVul subset is more volatile: the same baseline has
 mean future recall 0.455 [0.371, 0.556] with temporal FPR 0.252 and
-independent-clean specificity 0.830 [0.798, 0.857]. This contrast is central to
+independent-clean specificity 0.700 [0.682, 0.718]. This contrast is central to
 the paper's claim. Temporal behavior is dataset- and policy-dependent; the
 maintenance problem is to measure that behavior and choose an operating policy,
 not to assume universal monotonic decay.
@@ -728,15 +741,15 @@ are computed on the independent clean-only challenge.}
 Dataset & Model & Mean recall [95\% CI] & Mean F1 & Temporal FPR &
 Clean specificity [95\% CI] & Clean FPR \\
 \midrule
-CVEfixes & char4 hash LR & 0.882 [0.871, 0.893] & 0.619 & 0.821 & 0.082 [0.063, 0.106] & 0.918 \\
-CVEfixes & code metrics LR & 0.904 [0.892, 0.917] & 0.633 & 0.804 & 0.058 [0.043, 0.079] & 0.942 \\
-CVEfixes & frozen emb. LR & 0.820 [0.808, 0.831] & 0.628 & 0.669 & 0.106 [0.084, 0.132] & 0.894 \\
-CVEfixes & token TF-IDF LR & 0.851 [0.833, 0.868] & 0.653 & 0.637 & 0.172 [0.145, 0.203] & 0.828 \\
+CVEfixes & char4 hash LR & 0.882 [0.871, 0.893] & 0.619 & 0.821 & 0.155 [0.142, 0.170] & 0.845 \\
+CVEfixes & code metrics LR & 0.904 [0.892, 0.917] & 0.633 & 0.804 & 0.075 [0.065, 0.086] & 0.925 \\
+CVEfixes & frozen emb. LR & 0.820 [0.808, 0.831] & 0.628 & 0.669 & 0.275 [0.258, 0.293] & 0.725 \\
+CVEfixes & token TF-IDF LR & 0.851 [0.833, 0.868] & 0.653 & 0.637 & 0.184 [0.170, 0.200] & 0.816 \\
 \midrule
-DiverseVul recovered & char4 hash LR & 0.455 [0.371, 0.556] & 0.180 & 0.252 & 0.830 [0.798, 0.857] & 0.170 \\
-DiverseVul recovered & code metrics LR & 0.655 [0.607, 0.702] & 0.215 & 0.307 & 0.934 [0.912, 0.951] & 0.066 \\
-DiverseVul recovered & frozen emb. LR & 0.345 [0.323, 0.368] & 0.180 & 0.170 & 0.715 [0.678, 0.748] & 0.285 \\
-DiverseVul recovered & token TF-IDF LR & 0.633 [0.599, 0.666] & 0.172 & 0.396 & 0.164 [0.137, 0.195] & 0.836 \\
+DiverseVul recovered & char4 hash LR & 0.455 [0.371, 0.556] & 0.180 & 0.252 & 0.700 [0.682, 0.718] & 0.300 \\
+DiverseVul recovered & code metrics LR & 0.655 [0.607, 0.702] & 0.215 & 0.307 & 0.825 [0.810, 0.840] & 0.175 \\
+DiverseVul recovered & frozen emb. LR & 0.345 [0.323, 0.368] & 0.180 & 0.170 & 0.812 [0.796, 0.826] & 0.188 \\
+DiverseVul recovered & token TF-IDF LR & 0.633 [0.599, 0.666] & 0.172 & 0.396 & 0.579 [0.560, 0.598] & 0.421 \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -828,15 +841,20 @@ DiverseVul recovered & PrimeVul recovered & 5 & 0.322 & 0.394 & 0.300 \\
 \end{tabular}
 \end{table*}
 
-Table~\ref{tab:project-maintenance} repeats the five classical policies under
+Table~\ref{tab:project-maintenance} repeats the five standard classical
+policies and the CWE-aware sliding policy under
 unseen-project temporal testing. This design is the strongest classical
 policy-validity check because it asks whether maintenance helps on projects not
 seen during training. On CVEfixes, refresh and calibration policies increase
-recall over no refresh, but mean FPR remains between 0.938 and 0.945. The recall
-gain therefore buys more detected positives at substantial alert cost. On
-recovered-date DiverseVul, refresh policies usually reduce FPR while
-also reducing recall. Across both datasets, maintenance policy, label cost, and
-operating point must be interpreted together.
+recall over no refresh, but mean FPR remains between 0.932 and 0.945. The recall
+gain therefore buys more detected positives at substantial alert cost. The
+CWE-aware policy slightly lowers CVEfixes FPR relative to the other refresh
+policies, but it does not solve the alert-cost problem. On recovered-date
+DiverseVul, refresh policies reduce FPR while also reducing recall. The C2
+criterion is therefore a negative result: no tested policy reaches recall
+\(\geq 0.50\) while keeping FPR \(\leq 0.30\). Across both datasets,
+maintenance policy, label cost, and operating point must be interpreted
+together.
 
 \begin{table*}
 \centering
@@ -854,12 +872,14 @@ CVEfixes & Cumulative retrain & 0.970 & [0.953, 0.985] & 0.638 & 0.938 & 975.9 \
 CVEfixes & Sliding 3-year retrain & 0.971 & [0.957, 0.983] & 0.638 & 0.944 & 1021.0 \\
 CVEfixes & Calibration only & 0.972 & [0.951, 0.988] & 0.633 & 0.944 & 1529.3 \\
 CVEfixes & Small recent update & 0.972 & [0.948, 0.989] & 0.637 & 0.945 & 40.0 \\
+CVEfixes & CWE-aware sliding & 0.966 & [0.953, 0.978] & 0.638 & 0.932 & 1021.0 \\
 \midrule
-DiverseVul recovered & No refresh & 0.932 & [0.887, 0.964] & 0.152 & 0.824 & 0.0 \\
-DiverseVul recovered & Cumulative retrain & 0.443 & [0.269, 0.630] & 0.194 & 0.218 & 1546.8 \\
-DiverseVul recovered & Sliding 3-year retrain & 0.453 & [0.339, 0.590] & 0.197 & 0.232 & 1573.8 \\
-DiverseVul recovered & Calibration only & 0.439 & [0.190, 0.727] & 0.151 & 0.308 & 2397.7 \\
-DiverseVul recovered & Small recent update & 0.310 & [0.136, 0.481] & 0.176 & 0.144 & 40.0 \\
+DiverseVul recovered & No refresh & 0.943 & [0.893, 0.976] & 0.149 & 0.860 & 0.0 \\
+DiverseVul recovered & Cumulative retrain & 0.424 & [0.196, 0.675] & 0.158 & 0.291 & 1546.8 \\
+DiverseVul recovered & Sliding 3-year retrain & 0.379 & [0.173, 0.632] & 0.162 & 0.243 & 1573.8 \\
+DiverseVul recovered & Calibration only & 0.435 & [0.219, 0.700] & 0.152 & 0.315 & 2397.7 \\
+DiverseVul recovered & Small recent update & 0.347 & [0.164, 0.522] & 0.174 & 0.195 & 40.0 \\
+DiverseVul recovered & CWE-aware sliding & 0.430 & [0.276, 0.655] & 0.175 & 0.290 & 1573.8 \\
 \bottomrule
 \end{tabular}
 }
@@ -992,14 +1012,14 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
       };
       \addlegendentry{CVEfixes}
       \addplot[name path=dvpolicycostupper,draw=none,forget plot] coordinates {
-        (0,0.977) (40.0,0.483) (1546.8,0.631) (1573.8,0.590) (2397.7,0.727)
+        (0,0.976) (40.0,0.522) (1546.8,0.675) (1573.8,0.632) (2397.7,0.700)
       };
       \addplot[name path=dvpolicycostlower,draw=none,forget plot] coordinates {
-        (0,0.887) (40.0,0.137) (1546.8,0.255) (1573.8,0.316) (2397.7,0.151)
+        (0,0.893) (40.0,0.164) (1546.8,0.196) (1573.8,0.173) (2397.7,0.219)
       };
       \addplot[orange!25,opacity=0.42,forget plot] fill between[of=dvpolicycostupper and dvpolicycostlower];
       \addplot+[orange!85!black,thick,mark=square*] coordinates {
-        (0,0.932) (40.0,0.310) (1546.8,0.443) (1573.8,0.453) (2397.7,0.439)
+        (0,0.943) (40.0,0.347) (1546.8,0.424) (1573.8,0.379) (2397.7,0.435)
       };
       \addlegendentry{DiverseVul recovered}
     \end{axis}
@@ -1320,7 +1340,7 @@ near-duplicate-controlled runs have no train-to-future commit-group or paired
 vulnerable/fixed-group overlap. Project overlap is low in future CVEfixes test
 windows and moderate in recovered-date DiverseVul. The repository-clean
 benchmark gives the strongest warning: the CVEfixes-trained character model has
-specificity 0.082 on clean functions harvested from projects outside the
+specificity 0.155 on clean functions harvested from projects outside the
 vulnerability-dataset construction pipeline. This confirms that fixed-code
 negatives do not substitute for independently sampled clean functions.
 
@@ -1336,18 +1356,19 @@ near-duplicate-controlled runs.}
 Dataset & Test project overlap & Commit overlap & Pair overlap &
 Unseen-project recall & Clean specificity \\
 \midrule
-CVEfixes controlled & 0.046 & 0.000 & 0.000 & 0.891 & 0.082 \\
-DiverseVul recovered & 0.102 & 0.000 & 0.000 & 0.494 & 0.830 \\
+CVEfixes controlled & 0.046 & 0.000 & 0.000 & 0.891 & 0.155 \\
+DiverseVul recovered & 0.102 & 0.000 & 0.000 & 0.494 & 0.700 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 Table~\ref{tab:clean-source} reports the repository-clean benchmark by detector
 family with Wilson confidence intervals. The CVEfixes-trained detectors have
-poor specificity across all four feature families, ranging from 0.058 to 0.172.
-Recovered-date DiverseVul is less uniformly poor: code metrics and character
-features have specificity 0.934 and 0.830, while token TF-IDF still flags most
-repository-clean functions. The key validity point remains: a model can look
+poor specificity across all four feature families, ranging from 0.075 to 0.275.
+Recovered-date DiverseVul is less uniformly poor: code metrics, frozen
+embeddings, and character features have specificity between 0.700 and 0.825,
+while token TF-IDF still flags many repository-clean functions. The key validity
+point remains: a model can look
 strong on pre/post-fix temporal recall while flagging many clean-only functions.
 
 \begin{table*}
@@ -1361,15 +1382,15 @@ Confidence intervals are Wilson 95\% intervals for specificity.}
 \toprule
 Training source & Model & Rows & Specificity & 95\% CI & FPR \\
 \midrule
-CVEfixes & char4 hash LR & 634 & 0.082 & [0.063, 0.106] & 0.918 \\
-CVEfixes & code metrics LR & 634 & 0.058 & [0.043, 0.079] & 0.942 \\
-CVEfixes & frozen emb. LR & 634 & 0.106 & [0.084, 0.132] & 0.894 \\
-CVEfixes & token TF-IDF LR & 634 & 0.172 & [0.145, 0.203] & 0.828 \\
+CVEfixes & char4 hash LR & 2500 & 0.155 & [0.142, 0.170] & 0.845 \\
+CVEfixes & code metrics LR & 2500 & 0.075 & [0.065, 0.086] & 0.925 \\
+CVEfixes & frozen emb. LR & 2500 & 0.275 & [0.258, 0.293] & 0.725 \\
+CVEfixes & token TF-IDF LR & 2500 & 0.184 & [0.170, 0.200] & 0.816 \\
 \midrule
-DiverseVul recovered & char4 hash LR & 634 & 0.830 & [0.798, 0.857] & 0.170 \\
-DiverseVul recovered & code metrics LR & 634 & 0.934 & [0.912, 0.951] & 0.066 \\
-DiverseVul recovered & frozen emb. LR & 634 & 0.715 & [0.678, 0.748] & 0.285 \\
-DiverseVul recovered & token TF-IDF LR & 634 & 0.164 & [0.137, 0.195] & 0.836 \\
+DiverseVul recovered & char4 hash LR & 2500 & 0.700 & [0.682, 0.718] & 0.300 \\
+DiverseVul recovered & code metrics LR & 2500 & 0.825 & [0.810, 0.840] & 0.175 \\
+DiverseVul recovered & frozen emb. LR & 2500 & 0.812 & [0.796, 0.826] & 0.188 \\
+DiverseVul recovered & token TF-IDF LR & 2500 & 0.579 & [0.560, 0.598] & 0.421 \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -1391,32 +1412,32 @@ DiverseVul recovered & token TF-IDF LR & 634 & 0.164 & [0.137, 0.195] & 0.836 \\
       grid=major
     ]
       \addplot[name path=cvecleanupper,draw=none,forget plot] coordinates {
-        (1,0.106) (2,0.079) (3,0.132) (4,0.203)
+        (1,0.170) (2,0.086) (3,0.293) (4,0.200)
       };
       \addplot[name path=cvecleanlower,draw=none,forget plot] coordinates {
-        (1,0.058) (2,0.037) (3,0.080) (4,0.141)
+        (1,0.142) (2,0.065) (3,0.258) (4,0.170)
       };
       \addplot[blue!20,opacity=0.45,forget plot] fill between[of=cvecleanupper and cvecleanlower];
       \addplot+[blue,thick,mark=*] coordinates {
-        (1,0.082) (2,0.058) (3,0.106) (4,0.172)
+        (1,0.155) (2,0.075) (3,0.275) (4,0.184)
       };
       \addlegendentry{CVEfixes}
       \addplot[name path=dvcleanupper,draw=none,forget plot] coordinates {
-        (1,0.861) (2,0.956) (3,0.751) (4,0.195)
+        (1,0.718) (2,0.840) (3,0.826) (4,0.598)
       };
       \addplot[name path=dvcleanlower,draw=none,forget plot] coordinates {
-        (1,0.799) (2,0.912) (3,0.679) (4,0.133)
+        (1,0.682) (2,0.810) (3,0.796) (4,0.560)
       };
       \addplot[orange!25,opacity=0.42,forget plot] fill between[of=dvcleanupper and dvcleanlower];
       \addplot+[orange!85!black,thick,mark=square*] coordinates {
-        (1,0.830) (2,0.934) (3,0.715) (4,0.164)
+        (1,0.700) (2,0.825) (3,0.812) (4,0.579)
       };
       \addlegendentry{DiverseVul recovered}
     \end{axis}
   \end{tikzpicture}
   \caption{Repository-clean specificity benchmark. Lines show specificity by
   detector family and shaded bands are Wilson 95\% intervals computed from
-  true-negative and false-positive counts on the 634 clean-only functions.}
+  true-negative and false-positive counts on the 2,500 clean-only functions.}
   \label{fig:clean-specificity}
 \end{figure*}
 
@@ -1431,34 +1452,48 @@ baseline. Confidence intervals are Wilson 95\% intervals.}
 \toprule
 Training source & Clean language group & Rows & Specificity & 95\% CI & Clean FPR \\
 \midrule
-CVEfixes & C/C++ & 203 & 0.094 & [0.061, 0.142] & 0.906 \\
-CVEfixes & Python & 415 & 0.077 & [0.055, 0.107] & 0.923 \\
-CVEfixes & Unknown & 16 & 0.062 & [0.011, 0.283] & 0.938 \\
+CVEfixes & C/C++ & 2265 & 0.159 & [0.144, 0.175] & 0.841 \\
+CVEfixes & Python & 235 & 0.119 & [0.084, 0.167] & 0.881 \\
 \midrule
-DiverseVul recovered & C/C++ & 203 & 0.788 & [0.727, 0.839] & 0.212 \\
-DiverseVul recovered & Python & 415 & 0.843 & [0.805, 0.875] & 0.157 \\
-DiverseVul recovered & Unknown & 16 & 1.000 & [0.806, 1.000] & 0.000 \\
+DiverseVul recovered & C/C++ & 2265 & 0.694 & [0.674, 0.712] & 0.306 \\
+DiverseVul recovered & Python & 235 & 0.766 & [0.708, 0.816] & 0.234 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
 \subsection{RQ2: Drift Sources}
 
-For CVEfixes, vulnerable-ratio shift has the strongest absolute correlation
-with recall drop for the selected baseline ($r=-0.880$), followed by project
-turnover ($r=-0.763$), median length shift ($r=-0.762$), CWE turnover
-($r=-0.753$), and project Jensen-Shannon divergence ($r=-0.741$). Permutation
-tests over seven annual windows give $p=0.0045$ for vulnerable-ratio shift, and
-this association remains below 0.05 after Holm adjustment over nine drift
-signals ($p_{\mathrm{Holm}}=0.0405$; Fisher 95\% CI for $r$:
-[-0.982, -0.375]). Project turnover and median length shift have unadjusted
-$p<0.05$ but do not survive the same family-wise correction. For recovered-date
-DiverseVul, vulnerable-ratio shift is again largest in absolute value
-($r=-0.728$), followed by CWE turnover ($r=0.704$), but no drift signal survives
-correction over six annual windows; the smallest adjusted $p$ is 1.000. We
-therefore treat drift signals as maintenance indicators, not causal
+Rolling-origin drift analysis produces 48 paired drift-performance rows rather
+than relying on a single annual sequence. For CVEfixes, the strongest adjusted
+association is project turnover with recall drop across 26 paired replicates
+($r=-0.558$, Fisher 95\% CI [-0.777, -0.218],
+$p_{\mathrm{Holm}}=0.027$). Vulnerable-ratio shift, CWE divergence, and project
+divergence are also moderate in magnitude, but only project turnover remains
+below 0.05 after Holm adjustment. For recovered-date DiverseVul, CWE turnover is
+largest across 22 paired replicates ($r=0.422$, Fisher 95\% CI [0.001, 0.716]),
+but it does not survive family-wise correction ($p_{\mathrm{Holm}}=0.445$).
+We therefore treat drift signals as maintenance indicators, not causal
 explanations: they identify windows that deserve inspection, but they do not by
 themselves prove why performance changed.
+
+\begin{table*}
+\centering
+\caption{Rolling-origin paired drift--performance analysis for the primary
+character baseline. Each pair is one future test year under one train/validation
+origin. Correlations are between the drift signal and recall drop from that
+origin's first future window; intervals use Fisher's $z$-transform.}
+\label{tab:rolling-drift}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrr}
+\toprule
+Dataset & Strongest adjusted signal & Pairs & Pearson $r$ & 95\% CI & Holm $p$ \\
+\midrule
+CVEfixes & Project turnover & 26 & -0.558 & [-0.777, -0.218] & 0.027 \\
+DiverseVul recovered & CWE turnover & 22 & 0.422 & [0.001, 0.716] & 0.445 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \begin{table*}
 \centering
@@ -1477,14 +1512,16 @@ CVEfixes & Small-update recall gain vs no refresh & +0.072 & [0.934, 0.974] & 40
 Low-cost update improves recall in ordinary temporal testing. \\
 CVEfixes & Project-held-out small-update FPR & 0.945 & -- & 40 labels/window &
 Recall gain is useful only at an explicitly accepted FPR operating point. \\
-CVEfixes & Vulnerable-ratio shift vs recall drop & $r=-0.880$ & CI [-0.982, -0.375]; $p_H=0.0405$ & $n=7$ &
-Strong descriptive association after Holm correction. \\
+CVEfixes & Project turnover vs recall drop & $r=-0.558$ & CI [-0.777, -0.218]; $p_H=0.027$ & $n=26$ &
+Rolling-origin association after Holm correction. \\
 DiverseVul recovered & Ordinary temporal recall change & -0.372 & -- & -- &
 Recovered-date subset shows stronger temporal decline. \\
-DiverseVul recovered & Project-held-out no-refresh FPR & 0.824 & -- & -- &
+DiverseVul recovered & Project-held-out no-refresh FPR & 0.860 & -- & -- &
 High recall is coupled to high false-positive cost. \\
-DiverseVul recovered & Vulnerable-ratio shift vs recall drop & $r=-0.728$ & CI [-0.968, 0.204]; $p_H=1.000$ & $n=6$ &
-Descriptive only; annual sample is too small for a firm claim. \\
+DiverseVul recovered & C2 service-level check & no pass & recall $\geq 0.50$ and FPR $\leq 0.30$ & six policies &
+Negative result: maintenance alone does not reach the specified operating point. \\
+DiverseVul recovered & CWE turnover vs recall drop & $r=0.422$ & CI [0.001, 0.716]; $p_H=0.445$ & $n=22$ &
+Descriptive only after rolling-origin correction. \\
 \bottomrule
 \end{tabular}
 }

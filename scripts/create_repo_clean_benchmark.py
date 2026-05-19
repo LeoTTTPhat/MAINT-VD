@@ -77,7 +77,7 @@ def c_like_functions(root: Path, path: Path, text: str, min_chars: int, max_char
     # Conservative source-level extractor: find likely function headers and
     # balance braces. It intentionally ignores macros and declarations.
     pattern = re.compile(
-        r"(?m)^[A-Za-z_][A-Za-z0-9_\\s\\*:&<>~,]*\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*\\([^;{}]*\\)\\s*\\{"
+        r"(?m)^[A-Za-z_][A-Za-z0-9_\s\*:&<>~,]*\s+([A-Za-z_][A-Za-z0-9_]*)\s*\([^;{}]*\)\s*\{"
     )
     out = []
     for match in pattern.finditer(text):
