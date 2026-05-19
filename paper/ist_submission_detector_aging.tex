@@ -440,9 +440,10 @@ outcome.
     \draw[arrow] (clean) -- (service);
     \draw[arrow] (threshold) -- (cost);
     \draw[arrow] (service) -- (cost);
-    \draw[arrow] (cost.south) -- ++(0,-0.55) coordinate (loopbottom)
-      -| node[pos=0.25,below,font=\footnotesize] {recalibrate or update}
-      ([xshift=-0.55cm]policy.west) -- (policy.west);
+    \draw[arrow] (cost.east) -- ++(4.15,0) coordinate (loopright)
+      |- node[pos=0.66,right,font=\footnotesize,align=center]
+      {recalibrate\\or update}
+      ([xshift=0.65cm]policy.east) -- (policy.east);
   \end{tikzpicture}
   \caption{Visual summary of MAINT-VD detector maintenance.}
   \label{fig:maintenance-loop}
