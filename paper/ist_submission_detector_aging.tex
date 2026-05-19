@@ -907,11 +907,11 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
 \end{tabular}
 \end{table*}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.78\textwidth,
+      width=\columnwidth,
       height=5.8cm,
       xmin=1,
       xmax=5,
@@ -935,13 +935,13 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
   \end{tikzpicture}
   \caption{PrimeVul-paired neural validation AUPRC by epoch.}
   \label{fig:primevul-training}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.95\textwidth,
+      width=\columnwidth,
       height=6.4cm,
       xmin=0,
       xmax=2500,
@@ -978,13 +978,13 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
   \end{tikzpicture}
   \caption{Policy-vs-label-cost view under unseen-project temporal testing.}
   \label{fig:policy-cost}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.72\textwidth,
+      width=\columnwidth,
       height=6cm,
       xmin=0.75,
       xmax=2.25,
@@ -1022,13 +1022,13 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
   \end{tikzpicture}
   \caption{Ordinary temporal versus project-held-out no-refresh evaluation.}
   \label{fig:ordinary-project}
-\end{figure*}
+\end{figure}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.95\textwidth,
+      width=\columnwidth,
       height=6.2cm,
       xlabel={Future test year},
       ylabel={Recall},
@@ -1098,7 +1098,7 @@ Recall 0.234 [0.084, 0.376]; F1 0.280 [0.134, 0.416]; FPR 0.227 [0.085, 0.376] \
   \end{tikzpicture}
   \caption{Fixed-origin future recall curves with uncertainty bands.}
   \label{fig:aging}
-\end{figure*}
+\end{figure}
 
 \subsection{Near-Duplicate-Controlled and Neural Reruns}
 
@@ -1206,11 +1206,11 @@ DiverseVul recovered & LineVul full FT & 0.696 & 0.124 & 1.000/1.000 & 0.021/0.0
 }
 \end{table*}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.92\textwidth,
+      width=\columnwidth,
       height=6.4cm,
       xmin=0,
       xmax=1.02,
@@ -1269,7 +1269,7 @@ DiverseVul recovered & LineVul full FT & 0.696 & 0.124 & 1.000/1.000 & 0.021/0.0
   \end{tikzpicture}
   \caption{Threshold/FPR tradeoff for project-held-out neural runs.}
   \label{fig:operating}
-\end{figure*}
+\end{figure}
 
 \subsection{Independent Clean and Grouped Validity}
 
@@ -1331,11 +1331,11 @@ DiverseVul recovered & token TF-IDF LR & 2500 & 0.579 & [0.560, 0.598] & 0.421 \
 \end{tabular}
 \end{table*}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.88\textwidth,
+      width=\columnwidth,
       height=6.2cm,
       xmin=0.75,
       xmax=4.25,
@@ -1373,7 +1373,7 @@ DiverseVul recovered & token TF-IDF LR & 2500 & 0.579 & [0.560, 0.598] & 0.421 \
   \end{tikzpicture}
   \caption{Repository-clean specificity benchmark.}
   \label{fig:clean-specificity}
-\end{figure*}
+\end{figure}
 
 \begin{table*}
 \centering
@@ -1494,11 +1494,11 @@ DiverseVul recovered & Small recent update & 0.295 & 0.180 & 0.137 & [0.208, 0.4
 }
 \end{table*}
 
-\begin{figure*}
+\begin{figure}
   \centering
   \begin{tikzpicture}
     \begin{axis}[
-      width=0.95\textwidth,
+      width=\columnwidth,
       height=6.4cm,
       xmin=0.75,
       xmax=5.25,
@@ -1537,7 +1537,7 @@ DiverseVul recovered & Small recent update & 0.295 & 0.180 & 0.137 & [0.208, 0.4
   \end{tikzpicture}
   \caption{Maintenance-policy mean recall with bootstrap uncertainty.}
   \label{fig:maintenance}
-\end{figure*}
+\end{figure}
 
 \subsection{RQ4: Exploratory Monitoring Calibration}
 
