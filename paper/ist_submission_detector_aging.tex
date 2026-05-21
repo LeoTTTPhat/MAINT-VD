@@ -130,6 +130,46 @@ structure. An \emph{operating point} is the decision threshold at which a
 detector is run; changing it can trade recall against precision, specificity,
 and false-positive rate even when the model scores are unchanged.
 
+\begin{center}
+\begin{tikzpicture}[
+  font=\scriptsize,
+  shiftbox/.style={draw, rounded corners=2pt, align=center,
+    text width=0.42\columnwidth, inner sep=3pt, fill=gray!6},
+  signal/.style={draw, rounded corners=2pt, align=center,
+    text width=0.34\columnwidth, inner sep=3pt, fill=white},
+  arrow/.style={-Latex, thick}
+]
+  \node[shiftbox, fill=blue!7] (origin) at (0,0)
+    {\textbf{Training origin}\\historical projects\\historical labels};
+  \node[shiftbox, fill=blue!7] (future) at (0,-1.25)
+    {\textbf{Future stream}\\new repositories\\new label mix};
+  \draw[arrow] (origin) -- (future);
+
+  \node[signal] (project) at (-1.45,-2.65)
+    {\textbf{Project shift}\\repositories, APIs,\\coding conventions};
+  \node[signal] (label) at (1.45,-2.65)
+    {\textbf{Label shift}\\vulnerable ratio, CWE mix,\\clean-code source};
+  \node[signal] (token) at (-1.45,-4.0)
+    {\textbf{Vocabulary/style shift}\\tokens, identifiers,\\function length};
+  \node[signal] (op) at (1.45,-4.0)
+    {\textbf{Operating point}\\decision threshold\\recall--FPR tradeoff};
+
+  \draw[arrow] (future.south) -- ++(0,-0.35) -| (project.north);
+  \draw[arrow] (future.south) -- ++(0,-0.35) -| (label.north);
+  \draw[arrow] (project.south) -- (token.north);
+  \draw[arrow] (label.south) -- (op.north);
+
+  \node[shiftbox, fill=green!8] (service) at (0,-5.35)
+    {\textbf{Service behavior}\\recall, precision, specificity, FPR};
+  \draw[arrow] (token.south) |- (service.west);
+  \draw[arrow] (op.south) |- (service.east);
+\end{tikzpicture}
+\par\smallskip
+\footnotesize\textbf{Shift terminology at a glance.} Future detector behavior
+depends on who writes the code, what labels are observed, how code changes, and
+where the decision threshold is set.
+\end{center}
+
 This mismatch matters in practice. A detector with high recall but poor
 specificity can flood developers with alerts and lose trust. A detector tuned
 to suppress false positives may miss the vulnerabilities it was deployed to
