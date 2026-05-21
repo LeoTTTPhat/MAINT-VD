@@ -80,6 +80,26 @@ manifest entries and checksums. The package also includes a Dockerfile, an
 artifact-badge intent file, and a protocol snapshot that should be replaced by
 a DOI or immutable repository tag before submission.
 
+### Artifact Manifest Excerpt
+
+| Artifact | Format | SHA-256 prefix | Producing script |
+| --- | --- | --- | --- |
+| CVEfixes temporal export | JSONL | `755e512c41cd` | `prepare_temporal_vuln_datasets.py` |
+| DiverseVul recovered-date export | JSONL | `a9dd1b374436` | `recover_diversevul_commit_dates_http.py` |
+| DiverseVul recovered commit-date map | CSV | `9f51d2ccb3bf` | `recover_diversevul_commit_dates_http.py` |
+| CVEfixes aging metrics | CSV | `2e6bcaaf94b` | `conduct_detector_aging.py` |
+| CVEfixes project-held-out policy summary | CSV | `8e66c34e6565` | `run_project_heldout_classical_policies.py` |
+| Repository-clean benchmark | JSONL | `971c96199c01` | `create_repo_clean_benchmark.py` |
+| Recovered-date neural threshold rerun | CSV | `e3fa50228820` | `neural_operating_point_curves.py` |
+| PrimeVul recovered-date export | JSONL | `3428602a3dcd` | `prepare_primevul_commit_dated_temporal.py` |
+| PrimeVul recovered commit-date map | CSV | `bfc739aac1f3` | `prepare_primevul_commit_dated_temporal.py` |
+| PrimeVul recovered aging metrics | CSV | `402a9daa5b50` | `conduct_detector_aging.py` |
+| PrimeVul recovered CodeBERT curve | CSV | `a733c5d91c9c` | `finetune_transformer_temporal.py` |
+| PrimeVul recovered LineVul curve | CSV | `b50879b23a70` | `finetune_transformer_temporal.py` |
+| Cross-dataset probe summary | CSV | `176cb3280f68` | `run_cross_dataset_classical_probe.py` |
+| Small-update budget summaries | CSV | `b486fa449aae` | `run_project_heldout_classical_policies.py` |
+| PaperReview AI review snapshot | JSON | `d9f6cfde79ea` | Manual API export |
+
 ## Code Availability
 
 Repository:
@@ -89,4 +109,5 @@ https://github.com/LeoTTTPhat/MAINT-VD
 ```
 
 Before formal publication, create an immutable release tag or DOI archive so
-the code version matches the artifact checksums reported in the manuscript.
+the code version matches the artifact checksums reported in this README and
+`artifact_manifest.tsv`.

@@ -1793,36 +1793,8 @@ materials are available in the GitHub repository
 \href{https://github.com/LeoTTTPhat/MAINT-VD}
 {\texttt{https://github.com/LeoTTTPhat/MAINT-VD}}.
 The repository should be archived with a DOI or immutable release tag before
-final submission so that the artifact version matches the checksums reported in
-Table~\ref{tab:artifact-manifest}.
-
-\begin{table*}
-\centering
-\caption{Artifact manifest excerpt.}
-\label{tab:artifact-manifest}
-\scriptsize
-\begin{tabular}{llll}
-\toprule
-Artifact & Format & SHA-256 prefix & Producing script \\
-\midrule
-CVEfixes temporal export & JSONL & 755e512c41cd & \texttt{prepare\_temporal\_vuln\_datasets.py} \\
-DiverseVul recovered-date export & JSONL & a9dd1b374436 & \texttt{recover\_diversevul\_commit\_dates\_http.py} \\
-DiverseVul recovered commit-date map & CSV & 9f51d2ccb3bf & \texttt{recover\_diversevul\_commit\_dates\_http.py} \\
-CVEfixes aging metrics & CSV & 2e6bcaaf94b & \texttt{conduct\_detector\_aging.py} \\
-CVEfixes project-held-out policy summary & CSV & 8e66c34e6565 & \texttt{run\_project\_heldout\_classical\_policies.py} \\
-Repository-clean benchmark & JSONL & 971c96199c01 & \texttt{create\_repo\_clean\_benchmark.py} \\
-Recovered-date neural threshold rerun & CSV & e3fa50228820 & \texttt{neural\_operating\_point\_curves.py} \\
-PrimeVul recovered-date export & JSONL & 3428602a3dcd & \texttt{prepare\_primevul\_commit\_dated\_temporal.py} \\
-PrimeVul recovered commit-date map & CSV & bfc739aac1f3 & \texttt{prepare\_primevul\_commit\_dated\_temporal.py} \\
-PrimeVul recovered aging metrics & CSV & 402a9daa5b50 & \texttt{conduct\_detector\_aging.py} \\
-PrimeVul recovered CodeBERT curve & CSV & a733c5d91c9c & \texttt{finetune\_transformer\_temporal.py} \\
-PrimeVul recovered LineVul curve & CSV & b50879b23a70 & \texttt{finetune\_transformer\_temporal.py} \\
-Cross-dataset probe summary & CSV & 176cb3280f68 & \texttt{run\_cross\_dataset\_classical\_probe.py} \\
-Small-update budget summaries & CSV & b486fa449aae & \texttt{run\_project\_heldout\_classical\_policies.py} \\
-PaperReview AI review snapshot & JSON & d9f6cfde79ea & Manual API export \\
-\bottomrule
-\end{tabular}
-\end{table*}
+final submission so that the released artifact version matches the checksums
+reported in the repository manifest.
 
 \section*{Acknowledgement}
 
