@@ -69,16 +69,23 @@ python3 scripts/run_cross_dataset_classical_probe.py --help
 python3 scripts/finetune_transformer_temporal.py --help
 ```
 
-Some experiments require local dataset exports and substantial compute. The
-tracked scripts and `artifact_manifest.tsv` document the expected outputs and
-checksums for the local replication package.
+Some experiments require local dataset exports and substantial compute.
+
+## Data Availability
+
+The local replication package contains normalization scripts, temporal JSONL
+exports, split manifests, model outputs, metrics, and generated reports. A
+release DOI is pending; `artifact_manifest.tsv` records the current local
+manifest entries and checksums. The package also includes a Dockerfile, an
+artifact-badge intent file, and a protocol snapshot that should be replaced by
+a DOI or immutable repository tag before submission.
 
 ## Code Availability
 
 Repository:
 
 ```text
-https://github.com/LeoTTTPhat/TemporalMaintenanceVulnerabilityDetectors
+https://github.com/LeoTTTPhat/MAINT-VD
 ```
 
 Before formal publication, create an immutable release tag or DOI archive so
