@@ -55,12 +55,12 @@ chronological aging, unseen-project temporal testing, independent-clean
 specificity, and operating-point sweeps. The
 framework is instantiated on CVEfixes, recovered-date DiverseVul, and a
 commit-dated PrimeVul-paired sensitivity study. On CVEfixes, a character
-4-gram baseline reaches mean future recall 0.882 [0.871, 0.893], but
-repository-clean specificity is only 0.155 [0.142, 0.170], showing that high
+4-gram baseline reaches mean future recall 0.882, but
+repository-clean specificity is only 0.155, showing that high
 pre/post-fix recall is not evidence of arbitrary clean-code behavior. Under
 unseen-project temporal testing, a small recent-update policy reaches recall
-0.972 [0.948, 0.989] at FPR 0.945 on CVEfixes, while the same policy reaches
-recall 0.347 [0.164, 0.522] at FPR 0.195 on recovered-date DiverseVul; no
+0.972 at FPR 0.945 on CVEfixes, while the same policy reaches
+recall 0.347 at FPR 0.195 on recovered-date DiverseVul; no
 tested DiverseVul policy satisfies recall \(\geq 0.50\) at FPR \(\leq 0.30\).
 Full-dataset CodeBERT and LineVul runs further show that threshold rules
 matter: recovered-date DiverseVul has moderate AUROC but low AUPRC, and a
