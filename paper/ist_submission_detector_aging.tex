@@ -118,6 +118,17 @@ population: a detector trained on historical functions from one set of
 repositories may later be applied to different repositories, or to a different
 mixture of repositories, with different APIs, naming conventions, file
 structures, vulnerability types, and fix styles.
+We use \emph{label-distribution shift} for changes in what the labels mean or
+how often they occur: for example, the future stream may contain a different
+vulnerable-to-clean ratio, a different mix of CWE categories, or fixed-code
+negatives that differ from independently clean functions. Related shift signals
+used in this article are descriptive measurements of that changing evaluation
+environment. \emph{CWE shift} denotes changes in the weakness-category mix,
+\emph{token or vocabulary shift} denotes new identifiers, APIs, or code idioms,
+and \emph{length or style shift} denotes changes in function size or code
+structure. An \emph{operating point} is the decision threshold at which a
+detector is run; changing it can trade recall against precision, specificity,
+and false-positive rate even when the model scores are unchanged.
 
 This mismatch matters in practice. A detector with high recall but poor
 specificity can flood developers with alerts and lose trust. A detector tuned
