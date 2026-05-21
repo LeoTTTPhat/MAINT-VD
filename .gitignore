@@ -8,6 +8,7 @@ __pycache__/
 # checksums; archive these separately with DOI/release assets rather than Git.
 data/
 results/
+paper/
 
 # LaTeX build products.
 paper/*.tex

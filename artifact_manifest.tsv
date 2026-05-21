@@ -11,7 +11,6 @@ Repository-clean benchmark	JSONL	fff93a9d1c0ef9a0a10dffbd3022c61da579f239bd8840d
 Recovered-date DiverseVul neural threshold rerun	CSV	e3fa5022882044b3a038794ed1285800afcc943ac61c240fdefdbe49e856e87f	local artifact; DOI pending	Project artifact	1.2K	scripts/neural_operating_point_curves.py
 CVEfixes repository-clean specificity	CSV	d5af282ded1b0f000a8c50c0196ab0f6ea0a37cb375a1e1e67b0f982d9211a34	local artifact; DOI pending	Project artifact	4.0K	scripts/evaluate_independent_clean_challenge.py
 DiverseVul repository-clean specificity	CSV	887b2f20715a5b081cfbe25b7021c99b3eb7b1fe6e6d62b383561ba504f050a8	local artifact; DOI pending	Project artifact	4.0K	scripts/evaluate_independent_clean_challenge.py
-IST manuscript source	TeX	218d4624899dbe59ae1ee4e84026949bb0bced76b71f448f595ff37b18b2d7d9	local artifact	Author copyright	92K	paper/ist_submission_detector_aging.tex
 PrimeVul-paired CVE-year export	JSONL	df82c487611d7ec4000610063642eb0ef64b6bcbf56748d8bdbaf0c1ab69d524	local artifact; DOI pending	Upstream dataset license applies	9.5M	scripts/prepare_primevul_paired_temporal.py
 PrimeVul-paired fixed-origin aging metrics	CSV	b6178a96e494fdac6dcb14e72343b97d0d2a1b69f4aeaaaa220a541d09969d3a	local artifact; DOI pending	Project artifact	5.4K	scripts/conduct_detector_aging.py
 PrimeVul CodeBERT tuned training curve	CSV	29bc03738ab558280f36ec8d9fbba0b3dfe65667744e5304c7b34e95b1913608	local artifact; DOI pending	Project artifact	736B	scripts/finetune_transformer_temporal.py
@@ -25,4 +24,3 @@ Cross-dataset classical probe summary	CSV	176cb3280f6819e590a37a2552d84d3950ec43
 CVEfixes small-update budget 10 summary	CSV	b486fa449aae9673d2e6b478831bedc90de3f7e0f2660b1e2247957b02ede53e	local artifact; DOI pending	Project artifact	1.2K	scripts/run_project_heldout_classical_policies.py
 CVEfixes small-update budget 100 summary	CSV	e083d8f4ee6f782d6e4698dc0bd47074b87c58926b494fd3de6126d3665ddc2b	local artifact; DOI pending	Project artifact	1.2K	scripts/run_project_heldout_classical_policies.py
 CVEfixes small-update budget 200 summary	CSV	a826d0feb354aefb05fe064d216a9bc571d92dbb7c7f197bf099da8a9d788e37	local artifact; DOI pending	Project artifact	1.2K	scripts/run_project_heldout_classical_policies.py
-PaperReview AI review snapshot	JSON	d9f6cfde79ea9733dcd2fbc947a18f55505a3424f148309acaa488183c84e3fc	local artifact; not for redistribution	Review-service terms apply	26K	paper/paperreview_ai_review.json
