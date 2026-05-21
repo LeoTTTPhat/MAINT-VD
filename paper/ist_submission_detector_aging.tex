@@ -64,10 +64,10 @@ recall 0.347 [0.164, 0.522] at FPR 0.195 on recovered-date DiverseVul; no
 tested DiverseVul policy satisfies recall \(\geq 0.50\) at FPR \(\leq 0.30\).
 Full-dataset CodeBERT and LineVul runs further show that threshold rules
 matter: recovered-date DiverseVul has moderate AUROC but low AUPRC, and a
-fixed-FPR threshold can collapse recall to nearly zero. These results support a
-precise thesis: vulnerability-detector maintenance policies and threshold rules
-materially affect future behavior under project and label-distribution shift;
-high temporal recall alone is not evidence of operational detector quality.
+fixed-FPR threshold can collapse recall to nearly zero. These results show that
+maintenance policies and threshold rules are part of detector behavior under
+project and label-distribution shift; temporal recall is meaningful only when
+reported with false-positive and clean-specificity evidence.
 \end{abstract}
 
 \begin{keywords}
@@ -121,9 +121,9 @@ We study these issues as \emph{security detector aging}. The phrase
 does not imply that every detector must decay monotonically. Instead, it names
 the empirical problem of understanding how detector behavior changes across
 future temporal windows and maintenance choices. The thesis is deliberately
-precise: vulnerability-detector maintenance policies and threshold rules
-materially affect future behavior under project and label-distribution shift;
-high temporal recall alone is not evidence of operational detector quality.
+precise: maintenance policies and threshold rules are part of detector behavior
+under project and label-distribution shift; temporal recall is meaningful only
+when reported with false-positive and clean-specificity evidence.
 Under this thesis, a detector is not just an
 architecture; it is a maintained software artifact composed of training data,
 feature extraction, model weights, calibration data, threshold policy,
@@ -1726,11 +1726,11 @@ revalidated as the surrounding software ecosystem changes. Treating these
 decisions as part of the detector turns temporal evaluation into a software
 maintenance problem.
 
-The empirical results support a precise conclusion:
-vulnerability-detector maintenance policies and threshold rules materially
-affect future behavior under project and label-distribution shift; high
-temporal recall alone is not evidence of operational detector quality. The
-evidence is not a simple story that every detector ages monotonically. On
+The empirical results support a precise conclusion: maintenance policies and
+threshold rules are part of detector behavior under project and
+label-distribution shift; temporal recall is meaningful only when reported with
+false-positive and clean-specificity evidence. The evidence is not a simple
+story that every detector ages monotonically. On
 CVEfixes, the primary character baseline remains relatively stable in ordinary
 temporal evaluation, and low-cost recent updates improve already strong recall.
 Under project-held-out temporal testing, however, classical refresh policies
