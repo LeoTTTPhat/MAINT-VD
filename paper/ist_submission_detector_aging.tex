@@ -158,7 +158,7 @@ The study is guided by four research questions:
   service-level maintenance events are defined?
 \end{description}
 
-The paper makes five framework and artifact contributions:
+The paper makes four framework and artifact contributions:
 
 \begin{enumerate}
   \item \emph{MAINT-VD}, a focused maintenance-evaluation framework organized
@@ -168,13 +168,11 @@ The paper makes five framework and artifact contributions:
   temporal dataset exports, recovered commit-date mappings, split manifests,
   model outputs, operating-point curves, policy summaries, statistical tables,
   and an artifact manifest with checksums.
-  \item Three instantiated evaluation cases: a corrected temporal CVEfixes
-  pre/post-fix study, a recovered-date DiverseVul sensitivity study, and a
-  true-dated PrimeVul-paired sensitivity study.
-  \item Validity and leakage controls reusable by future detector studies,
-  including exact- and near-duplicate controls, project/CVE-style grouping
-  analysis, project-held-out temporal testing, and independent-clean
-  specificity checks.
+  \item Three instantiated evaluation cases with reusable validity controls: a
+  corrected temporal CVEfixes pre/post-fix study, a recovered-date DiverseVul
+  sensitivity study, and a true-dated PrimeVul-paired sensitivity study, each
+  supported by duplicate, grouping, project-held-out, and independent-clean
+  checks.
   \item Detector-family demonstrations, not a detector leaderboard: lightweight
   classical baselines, frozen CodeBERT embeddings, calibrated LineVul, and
   full-dataset CodeBERT/LineVul fine-tuning are used to exercise MAINT-VD's
