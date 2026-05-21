@@ -158,7 +158,7 @@ The study is guided by four research questions:
   service-level maintenance events are defined?
 \end{description}
 
-The paper makes four framework and artifact contributions:
+The article makes four framework and artifact contributions:
 
 \begin{enumerate}
   \item \emph{MAINT-VD}, a focused maintenance-evaluation framework organized
@@ -214,7 +214,7 @@ arbitrary clean-code evaluation. \\
 \end{tabular}
 \end{table*}
 
-The remainder of the paper is structured as follows. Section~2 reviews
+The remainder of the article is structured as follows. Section~2 reviews
 vulnerability detection, dataset-validity threats, temporal evaluation, and
 concept drift as software-maintenance concerns. Section~3 presents the
 MAINT-VD protocol. Section~4 defines the experimental design, including
@@ -291,7 +291,7 @@ and non-vulnerable roles, and near-duplicate code can cross random or temporal
 split boundaries. Negative examples constructed from fixed versions of
 vulnerable functions are useful for a pre/post-fix task, but they do not prove
 that a detector distinguishes vulnerable code from independently clean code.
-These dataset-bias mechanisms motivate the paper's explicit checks for exact
+These dataset-bias mechanisms motivate the article's explicit checks for exact
 duplicates, near duplicates, project and commit grouping, and independently
 sampled clean functions.
 
@@ -328,7 +328,7 @@ detectors that must be operated and maintained after initial training.
 
 \subsection{Positioning of This Study}
 
-The paper differs from architecture-centered detector papers in three ways.
+The article differs from architecture-centered detector articles in three ways.
 First, it evaluates detector behavior over chronological windows and
 unseen-project splits rather than only random held-out examples. Second, it
 compares maintenance actions: no refresh, cumulative retraining,
@@ -586,7 +586,7 @@ full-dataset neural project-held-out experiment, the threshold is selected
 subject to a validation false-positive-rate ceiling of 0.20 when feasible; if
 the ceiling is infeasible, the lowest-FPR candidate is reported. To avoid
 hiding this design choice, neural results also include threshold sweeps with
-precision, recall, F1, specificity, FPR, AUROC, and AUPRC\@. The paper treats
+precision, recall, F1, specificity, FPR, AUROC, and AUPRC\@. The article treats
 recall gains without FPR context as incomplete maintenance evidence.
 In the reported full-dataset neural runs, the FPR ceiling is feasible for all
 four validation selections. The recovered-date DiverseVul neural rows have
@@ -678,7 +678,7 @@ vulnerable-versus-clean deployment performance.
 The recovered-date DiverseVul subset is more volatile: the same baseline has
 mean future recall 0.455 [0.371, 0.556] with temporal FPR 0.252 and
 independent-clean specificity 0.700 [0.682, 0.718]. This contrast is central to
-the paper's claim. Temporal behavior is dataset- and policy-dependent; the
+the article's claim. Temporal behavior is dataset- and policy-dependent; the
 maintenance problem is to measure that behavior and choose an operating policy,
 not to assume universal monotonic decay.
 
@@ -710,7 +710,7 @@ Table~\ref{tab:cutoff-sensitivity} reports the CVEfixes cutoff sensitivity for
 the primary character baseline. The ordinary-temporal stability claim is not an
 artifact of a single origin: mean recall ranges from 0.884 to 0.978 across four
 train/validation/test origins. The sign of first-to-last recall change varies,
-which supports the paper's narrower claim that temporal behavior is origin- and
+which supports the article's narrower claim that temporal behavior is origin- and
 policy-dependent rather than monotonically aging. In Table~\ref{tab:cutoff-sensitivity},
 decay is first-test recall minus last-test recall, so negative values indicate
 higher recall in the last test window.
@@ -766,7 +766,7 @@ primary character model. Each row trains and calibrates on one dataset's
 historical window, then tests on future windows from another recovered-date
 dataset. The results should be read as a stress test of dataset bias, not as a
 new primary benchmark. Cross-dataset recall is possible, but FPR and F1 vary
-substantially; this reinforces the paper's claim that dataset construction and
+substantially; this reinforces the article's claim that dataset construction and
 operating point are part of detector maintenance.
 
 \begin{table*}
@@ -1155,7 +1155,7 @@ DiverseVul recovered & LineVul full FT & 11,208 & 874 & 15,724 & 0.000 & 0.000 &
 \end{table*}
 
 Table~\ref{tab:neural-operating} is treated as a primary result rather than an
-appendix-style diagnostic: neural detector claims in this paper are interpreted
+appendix-style diagnostic: neural detector claims in this article are interpreted
 through operating-point rules, not through a single selected threshold.
 It expands the same neural runs across operating points, including best-F1,
 FPR-controlled, precision-floor, and Youden-\(J\) policies computed from the
@@ -1704,7 +1704,7 @@ not establish causality.
 
 \section{Conclusion}
 
-This paper contributed MAINT-VD, a maintenance-evaluation framework and
+This article contributed MAINT-VD, a maintenance-evaluation framework and
 artifact package for studying learning-based vulnerability detectors as
 maintained software artifacts. A deployed detector has a lifecycle: it is
 trained on historical projects, calibrated on a validation set, operated at a
@@ -1740,7 +1740,7 @@ functions. Second, temporal evidence depends on metadata quality. CVEfixes can
 serve as the primary temporal study because explicit dates are available in the
 local mirror. DiverseVul becomes much more useful after repository-date
 recovery, but remaining missingness still makes it better suited to sensitivity
-evidence than to the paper's primary claim. These points sharpen rather than
+evidence than to the article's primary claim. These points sharpen rather than
 weaken the maintenance thesis: they specify the empirical conditions under
 which the thesis can be defended.
 
@@ -1770,7 +1770,7 @@ revisable like the assumptions of other software engineering infrastructure.
 
 The authors declare no known competing financial interests or personal
 relationships that could have appeared to influence the work reported in this
-paper.
+article.
 
 \section*{Code Availability}
 
