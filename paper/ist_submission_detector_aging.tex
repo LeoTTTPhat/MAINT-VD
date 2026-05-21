@@ -54,16 +54,15 @@ contributes \emph{MAINT-VD}, a maintenance-evaluation framework and replication
 artifact package for studying vulnerability detectors over time. MAINT-VD is
 organized around four reusable checks: chronological aging, unseen-project
 temporal testing, independent-clean specificity, and operating-point sweeps. It
-is not proposed as a new detector or as a state-of-the-art architecture
-benchmark. Instead, it makes detector maintenance assumptions measurable and
+is not a new detector or a state-of-the-art architecture benchmark. Instead,
+it makes detector maintenance assumptions measurable and
 auditable. The artifact instantiates the framework on a primary CVEfixes study
 with 19,791 records framed as pre/post-fix detection, a recovered-date
 DiverseVul sensitivity study with 37,425 post-deduplication records, and a
 third PrimeVul-paired sensitivity study with recovered commit dates for 494
 commit pages, yielding 1,267 post-deduplication records across 74 projects. On
-CVEfixes, the character
-4-gram
-baseline has mean future recall 0.882 [0.871, 0.893], but repository-clean
+CVEfixes, the character 4-gram baseline has mean future recall 0.882 [0.871,
+0.893], but repository-clean
 specificity is only 0.155 [0.142, 0.170], so high pre/post-fix recall is not
 evidence of arbitrary clean-code behavior. Under unseen-project temporal
 testing, a small recent-update policy reaches recall 0.972 [0.948, 0.989] but
@@ -76,8 +75,8 @@ LineVul runs further show that threshold rules matter: on recovered-date
 DiverseVul, AUROC is moderate (0.724 and 0.696) but AUPRC is low (0.149 and
 0.124), and the fixed-FPR threshold rule can collapse recall to nearly zero.
 On PrimeVul-paired, CodeBERT and LineVul reach validation AUPRC 0.57 and 0.55
-under tuned fine-tuning, but selected-threshold future-project recall remains
-weak.
+under tuned fine-tuning, but future-project recall at the selected threshold
+remains weak.
 The results support a precise thesis: vulnerability-detector maintenance
 policies and threshold rules materially affect future behavior under project
 and label-distribution shift; high temporal recall alone is not evidence of
@@ -103,7 +102,7 @@ spread across related components, dependencies, and forks. Prior work has
 therefore developed graph-based detectors such as Devign~\cite{zhou2019devign},
 transformer-based detectors such as LineVul~\cite{fu2022linevul}, and
 pretrained code representations such as CodeBERT~\cite{feng2020codebert}.
-Public datasets including Big-Vul~\cite{fan2020bigvul},
+Public datasets, including Big-Vul~\cite{fan2020bigvul},
 CVEfixes~\cite{bhandari2021cvefixes}, and
 DiverseVul~\cite{chen2023diversevul} have also made vulnerability-detection
 experiments easier to reproduce and compare.
@@ -131,7 +130,7 @@ recalibrate, how many recent labels to acquire, whether a sliding window is
 preferable to cumulative retraining, and which distribution shifts should
 trigger intervention.
 
-This paper studies these issues as \emph{security detector aging}. The phrase
+We study these issues as \emph{security detector aging}. The phrase
 does not imply that every detector must decay monotonically. Instead, it names
 the empirical problem of understanding how detector behavior changes across
 future temporal windows and maintenance choices. The thesis is deliberately
@@ -172,7 +171,7 @@ The study is guided by four research questions:
   service-level maintenance events are defined?
 \end{description}
 
-The contributions are framework and artifact contributions:
+The paper makes five framework and artifact contributions:
 
 \begin{enumerate}
   \item \emph{MAINT-VD}, a focused maintenance-evaluation framework organized
@@ -205,7 +204,7 @@ The contributions are framework and artifact contributions:
 Finding & Empirical support \\
 \midrule
 Clean specificity changes the interpretation of recall &
-The CVEfixes character model has mean future recall 0.883 in ordinary temporal
+The CVEfixes character model has mean future recall 0.882 in ordinary temporal
 testing, but temporal FPR is high and repository-clean specificity is 0.155. \\
 Maintenance policies are operating-point choices &
 Under unseen-project CVEfixes testing, small recent update reaches recall 0.972
@@ -232,14 +231,15 @@ arbitrary clean-code evaluation. \\
 
 The remainder of the paper is structured as follows. Section~2 reviews
 vulnerability detection, dataset-validity threats, temporal evaluation, and
-concept drift as software-maintenance concerns. Section~3 defines the MAINT-VD
-experimental design, including datasets, temporal splits, detector families,
-maintenance policies, validity controls, and the statistical protocol.
-Section~4 reports the empirical results for temporal behavior, policy
-tradeoffs, neural operating points, clean-specificity checks, drift-performance
-links, and monitoring calibration. Section~5 discusses practical implications
-and threats to validity, and Section~6 concludes with the maintenance lesson for
-future vulnerability-detector evaluations.
+concept drift as software-maintenance concerns. Section~3 presents the
+MAINT-VD protocol. Section~4 defines the experimental design, including
+datasets, temporal splits, detector families, maintenance policies, validity
+controls, and the statistical protocol. Section~5 reports the empirical results
+for temporal behavior, policy tradeoffs, neural operating points,
+clean-specificity checks, drift-performance links, and monitoring calibration.
+Section~6 discusses practical implications, Section~7 summarizes threats to
+validity, and Section~8 concludes with the maintenance lesson for future
+vulnerability-detector evaluations.
 
 \section{Background and Related Work}
 
@@ -272,7 +272,7 @@ semantics with graph neural networks~\cite{zhou2019devign}; LineVul adapts
 transformers to line-level vulnerability prediction~\cite{fu2022linevul};
 CodeBERT provides pretrained code representations that are widely reused for
 downstream code intelligence tasks~\cite{feng2020codebert}. Datasets such as
-Big-Vul, CVEfixes, and DiverseVul made these studies easier to reproduce by
+Big-Vul, CVEfixes, and DiverseVul have made these studies easier to reproduce by
 linking code snippets, vulnerability reports, and fixing
 commits~\cite{fan2020bigvul,bhandari2021cvefixes,chen2023diversevul}. However,
 several studies caution that high benchmark scores can be fragile when
@@ -280,10 +280,9 @@ datasets contain label noise, project overlap, duplicated or near-duplicated
 code, unrealistic negative examples, or split designs that do not match future
 use~\cite{jimenez2016vulnerability,croft2023dataquality,
 chakraborty2022reveal,nguyen2022regvd,steenhoek2023empirical,
-risse2024limits,chen2023diversevul}. This paper therefore treats detector
-architecture as only one part of the problem. The empirical unit of interest is
-the maintained detector, including data, split design, threshold, and update
-policy.
+risse2024limits,chen2023diversevul}. We therefore treat detector architecture
+as only one part of the problem. The empirical unit of interest is the
+maintained detector, including data, split design, threshold, and update policy.
 
 Recent code-model and dataset work broadens this landscape. CodeT5 and
 UniXcoder introduce stronger pretrained code representations than the
@@ -351,7 +350,7 @@ compares maintenance actions: no refresh, cumulative retraining,
 sliding-window retraining, calibration-only updates, and small recent updates.
 Third, it reports operating points and false-positive costs explicitly. The
 intended contribution is therefore methodological and maintenance-oriented:
-how to evaluate whether a vulnerability detector remains useful as its
+it shows how to evaluate whether a vulnerability detector remains useful as its
 software environment changes.
 
 \section{MAINT-VD Protocol}
@@ -602,7 +601,7 @@ full-dataset neural project-held-out experiment, the threshold is selected
 subject to a validation false-positive-rate ceiling of 0.20 when feasible; if
 the ceiling is infeasible, the lowest-FPR candidate is reported. To avoid
 hiding this design choice, neural results also include threshold sweeps with
-precision, recall, F1, specificity, FPR, AUROC, and AUPRC. The paper treats
+precision, recall, F1, specificity, FPR, AUROC, and AUPRC\@. The paper treats
 recall gains without FPR context as incomplete maintenance evidence.
 In the reported full-dataset neural runs, the FPR ceiling is feasible for all
 four validation selections. The recovered-date DiverseVul neural rows have
@@ -651,7 +650,7 @@ intervals over yearly windows using 1,000 resamples and the 2.5th and 97.5th
 percentiles. Drift-performance links are evaluated with rolling-origin paired
 replicates rather than only one fixed origin. We reuse the four CVEfixes cutoff
 origins from the temporal sensitivity analysis and add the analogous four
-recovered-date DiverseVul origins listed in Section~5.2. Each future test year
+recovered-date DiverseVul origins listed in Section~4.2. Each future test year
 under each origin contributes one paired row containing drift signals and recall
 drop from that origin's first future window, yielding 26 CVEfixes pairs and 22
 DiverseVul pairs. Pearson correlations are checked with permutation tests that
@@ -676,8 +675,9 @@ that all update policies help.
 
 \section{Results}
 
-Table~\ref{tab:intro-findings} is the reader's summary anchor. The results
-below provide the detailed evidence behind those findings: fixed-origin temporal
+Table~\ref{tab:intro-findings} provides the summary anchor for the results.
+The subsections below give the detailed evidence behind those findings:
+fixed-origin temporal
 behavior and cutoff sensitivity, project-held-out policy tradeoffs,
 repository-clean specificity, neural operating-point diagnostics, rolling-origin
 drift correlations, and ordinary-temporal maintenance summaries.
@@ -753,8 +753,8 @@ dataset with recovered commit dates. The commit-date subset is much smaller
 than the full paired mirror because only 494 commit pages were recovered, but
 its temporal split no longer depends on CVE-year proxy dates. The task remains
 paired pre/post-fix detection rather than arbitrary vulnerable-versus-clean
-detection. The result is therefore best interpreted as external temporal
-sensitivity evidence: classical detectors again show that recall on paired
+detection. We therefore interpret the result as external temporal sensitivity
+evidence: classical detectors again show that recall on paired
 vulnerable/fixed examples must be interpreted jointly with alert cost and
 independent-clean specificity.
 
@@ -875,7 +875,7 @@ Labels/window & Recall & Mean F1 & Mean FPR & Interpretation \\
 Table~\ref{tab:primevul-neural} and Figure~\ref{fig:primevul-training}
 report the tuned neural diagnostic rerun requested by the review analysis. The
 rerun uses full-parameter fine-tuning, the recovered-date PrimeVul subset, all
-eligible training/validation/test rows under future-project holdout, maximum
+eligible training, validation, and test rows under future-project holdout, maximum
 sequence length 256, class-balanced loss, five requested epochs, early stopping
 by validation AUPRC, and retained validation-threshold curves. It is still a
 diagnostic rather than a definitive architecture comparison, but it is no
@@ -1159,7 +1159,7 @@ near-all-negative threshold.
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{llrrrrrrr}
 \toprule
-Dataset & Model & Train & Val. & Test & Val. recall & Val. FPR & Mean recall & Mean F1 \\
+Dataset & Model & Train & Valid. & Test & Valid. recall & Valid. FPR & Mean recall & Mean F1 \\
 \midrule
 CVEfixes & CodeBERT full FT & 3,980 & 579 & 11,369 & 0.615 & 0.190 & 0.563 & 0.612 \\
 CVEfixes & LineVul full FT & 3,980 & 579 & 11,369 & 0.452 & 0.183 & 0.414 & 0.503 \\
@@ -1646,7 +1646,7 @@ Operating condition & Clean funcs & FPR & Expected false alerts \\
 Strict validation cap & 20 per PR & 0.200 & 4.0; high but triageable \\
 Cross-dataset stress & 20 per PR & 0.700 & 14.0; likely too noisy \\
 CVEfixes project-held-out small update & 20 per PR & 0.945 & 18.9; nearly every clean function flagged \\
-Repository-clean char4 check & 1,000 in CI & 0.918 & 918; clean benchmark failure \\
+Repository-clean char4 check & 1,000 in CI & 0.845 & 845; clean benchmark failure \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -1783,7 +1783,7 @@ revisable like the assumptions of other software engineering infrastructure.
 
 \section*{Declaration of Competing Interest}
 
-The author declares no known competing financial interests or personal
+The authors declare no known competing financial interests or personal
 relationships that could have appeared to influence the work reported in this
 paper.
 
@@ -1840,7 +1840,7 @@ PaperReview AI review snapshot & JSON & d9f6cfde79ea & Manual API export \\
 
 \section*{Acknowledgments}
 
-The author thanks the maintainers of the public vulnerability datasets and
+The authors thank the maintainers of the public vulnerability datasets and
 open-source tooling used in this study.
 
 \bibliographystyle{elsarticle-num}
