@@ -49,38 +49,25 @@ Chi Minh City, Vietnam}
 \begin{abstract}
 Learning-based vulnerability detectors are usually evaluated as static
 predictors, but deployed detectors are maintained software artifacts: projects,
-labels, thresholds, and alert-cost constraints all change over time. This paper
-contributes \emph{MAINT-VD}, a maintenance-evaluation framework and replication
-artifact package for studying vulnerability detectors over time. MAINT-VD is
-organized around four reusable checks: chronological aging, unseen-project
-temporal testing, independent-clean specificity, and operating-point sweeps. It
-is not a new detector or a state-of-the-art architecture benchmark. Instead,
-it makes detector maintenance assumptions measurable and
-auditable. The artifact instantiates the framework on a primary CVEfixes study
-with 19,791 records framed as pre/post-fix detection, a recovered-date
-DiverseVul sensitivity study with 37,425 post-deduplication records, and a
-third PrimeVul-paired sensitivity study with recovered commit dates for 494
-commit pages, yielding 1,267 post-deduplication records across 74 projects. On
-CVEfixes, the character 4-gram baseline has mean future recall 0.882 [0.871,
-0.893], but repository-clean
-specificity is only 0.155 [0.142, 0.170], so high pre/post-fix recall is not
-evidence of arbitrary clean-code behavior. Under unseen-project temporal
-testing, a small recent-update policy reaches recall 0.972 [0.948, 0.989] but
-FPR 0.945, making the recall gain an operating-point tradeoff rather than an
-operational improvement. On recovered-date DiverseVul, the same policy
-reaches recall 0.347 [0.164, 0.522] at FPR 0.195, and no tested policy satisfies
-the C2 service level of recall \(\geq 0.50\) at FPR \(\leq 0.30\).
-Full-dataset CodeBERT and
-LineVul runs further show that threshold rules matter: on recovered-date
-DiverseVul, AUROC is moderate (0.724 and 0.696) but AUPRC is low (0.149 and
-0.124), and the fixed-FPR threshold rule can collapse recall to nearly zero.
-On PrimeVul-paired, CodeBERT and LineVul reach validation AUPRC 0.57 and 0.55
-under tuned fine-tuning, but future-project recall at the selected threshold
-remains weak.
-The results support a precise thesis: vulnerability-detector maintenance
-policies and threshold rules materially affect future behavior under project
-and label-distribution shift; high temporal recall alone is not evidence of
-operational detector quality.
+labels, thresholds, and alert-cost constraints all change over time. We
+contribute \emph{MAINT-VD}, a maintenance-evaluation framework and replication
+artifact package organized around chronological aging, unseen-project temporal
+testing, independent-clean specificity, and operating-point sweeps. The
+framework is instantiated on CVEfixes, recovered-date DiverseVul, and a
+commit-dated PrimeVul-paired sensitivity study. On CVEfixes, a character
+4-gram baseline reaches mean future recall 0.882 [0.871, 0.893], but
+repository-clean specificity is only 0.155 [0.142, 0.170], showing that high
+pre/post-fix recall is not evidence of arbitrary clean-code behavior. Under
+unseen-project temporal testing, a small recent-update policy reaches recall
+0.972 [0.948, 0.989] at FPR 0.945 on CVEfixes, while the same policy reaches
+recall 0.347 [0.164, 0.522] at FPR 0.195 on recovered-date DiverseVul; no
+tested DiverseVul policy satisfies recall \(\geq 0.50\) at FPR \(\leq 0.30\).
+Full-dataset CodeBERT and LineVul runs further show that threshold rules
+matter: recovered-date DiverseVul has moderate AUROC but low AUPRC, and a
+fixed-FPR threshold can collapse recall to nearly zero. These results support a
+precise thesis: vulnerability-detector maintenance policies and threshold rules
+materially affect future behavior under project and label-distribution shift;
+high temporal recall alone is not evidence of operational detector quality.
 \end{abstract}
 
 \begin{keywords}
