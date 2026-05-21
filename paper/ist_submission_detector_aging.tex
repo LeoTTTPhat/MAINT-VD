@@ -15,11 +15,11 @@
 \usepgfplotslibrary{fillbetween}
 \pgfplotsset{compat=1.18}
 \emergencystretch=2em
-\newcommand{\rqsummary}[1]{%
+\newcommand{\rqsummary}[2]{%
   \par\smallskip\noindent
   \fcolorbox{gray!55}{gray!6}{%
     \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
-      \small\textbf{RQ summary.} #1
+      \small\textbf{#1 summary.} #2
     \end{minipage}}%
   \par\smallskip
 }
@@ -690,12 +690,6 @@ repository-clean specificity, neural operating-point diagnostics, rolling-origin
 drift correlations, and ordinary-temporal maintenance summaries.
 
 \subsection{RQ1: Fixed-Origin Temporal Behavior}
-
-\rqsummary{CVEfixes shows stable pre/post-fix recall for the primary character
-baseline, but the high temporal FPR and low repository-clean specificity limit
-any operational interpretation. Recovered-date DiverseVul is more volatile,
-showing that temporal behavior depends on dataset construction and operating
-point.}
 
 Table~\ref{tab:aging} reports fixed-origin aging summaries. CVEfixes does not
 show catastrophic aging for the primary character baseline under the
@@ -1418,13 +1412,13 @@ DiverseVul recovered & Python & 235 & 0.766 & [0.708, 0.816] & 0.234 \\
 \end{tabular}
 \end{table*}
 
-\subsection{RQ2: Drift Sources}
+\rqsummary{RQ1}{CVEfixes shows stable pre/post-fix recall for the primary
+character baseline, but the high temporal FPR and low repository-clean
+specificity limit any operational interpretation. Recovered-date DiverseVul is
+more volatile, showing that temporal behavior depends on dataset construction
+and operating point.}
 
-\rqsummary{Rolling-origin analysis gives more evidence than a single annual
-sequence: project turnover is the strongest adjusted CVEfixes signal, whereas
-CWE turnover is only descriptive for recovered-date DiverseVul after
-correction. Drift signals are therefore maintenance indicators, not causal
-explanations.}
+\subsection{RQ2: Drift Sources}
 
 Rolling-origin drift analysis produces 48 paired drift-performance rows rather
 than relying on a single annual sequence. For CVEfixes, the strongest adjusted
@@ -1485,12 +1479,13 @@ Descriptive only after rolling-origin correction. \\
 }
 \end{table*}
 
-\subsection{RQ3: Maintenance Policies}
+\rqsummary{RQ2}{Rolling-origin analysis gives more evidence than a single
+annual sequence: project turnover is the strongest adjusted CVEfixes signal,
+whereas CWE turnover is only descriptive for recovered-date DiverseVul after
+correction. Drift signals are therefore maintenance indicators, not causal
+explanations.}
 
-\rqsummary{Maintenance policies change recall--FPR tradeoffs rather than simply
-improving detectors. Small recent updates improve CVEfixes recall at high FPR,
-while no recovered-date DiverseVul policy reaches the C2 service level of
-recall \(\geq 0.50\) at FPR \(\leq 0.30\).}
+\subsection{RQ3: Maintenance Policies}
 
 Table~\ref{tab:maintenance} reports the ordinary-temporal maintenance
 experiment, whereas Table~\ref{tab:project-maintenance} reports the stricter
@@ -1576,12 +1571,12 @@ DiverseVul recovered & Small recent update & 0.295 & 0.180 & 0.137 & [0.208, 0.4
   \label{fig:maintenance}
 \end{figure}
 
-\subsection{RQ4: Exploratory Monitoring Calibration}
+\rqsummary{RQ3}{Maintenance policies change recall--FPR tradeoffs rather than
+simply improving detectors. Small recent updates improve CVEfixes recall at
+high FPR, while no recovered-date DiverseVul policy reaches the C2 service
+level of recall \(\geq 0.50\) at FPR \(\leq 0.30\).}
 
-\rqsummary{The available yearly windows do not support a mature trigger-learning
-claim. CVEfixes has no violations under the chosen service event, and
-recovered-date DiverseVul yields only a small 3-of-4 event pattern, so drift
-alarms should be interpreted only with a pre-declared service level and action.}
+\subsection{RQ4: Exploratory Monitoring Calibration}
 
 Monitoring triggers are evaluated against a pre-specified recall-floor or
 recall-drop event. In the CVEfixes primary run, no yearly window violates the
@@ -1596,6 +1591,12 @@ replicates or another dataset to raise the number of service-level events from
 single digits to dozens. The limited result is still useful as a protocol
 guardrail: drift alarms should be interpreted only after an operational service
 level and maintenance action have been specified.
+
+\rqsummary{RQ4}{The available yearly windows do not support a mature
+trigger-learning claim. CVEfixes has no violations under the chosen service
+event, and recovered-date DiverseVul yields only a small 3-of-4 event pattern,
+so drift alarms should be interpreted only with a pre-declared service level and
+action.}
 
 \section{Discussion}
 
