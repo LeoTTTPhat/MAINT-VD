@@ -129,9 +129,9 @@ architecture; it is a maintained software artifact composed of training data,
 feature extraction, model weights, calibration data, threshold policy,
 monitoring signals, and update schedule.
 
-To make the thesis testable, we contribute \emph{MAINT-VD} (Maintenance
-Evaluation for Vulnerability Detectors): a reusable empirical framework and
-artifact package for temporal detector maintenance. The contribution is not a
+To make the thesis testable, we introduce \emph{MAINT-VD} (Maintenance
+Evaluation for Vulnerability Detectors): a reusable empirical framework for
+temporal detector maintenance. The contribution is not a
 new vulnerability detector and not a claim that the selected model families
 exhaust the state of the art. Rather, MAINT-VD specifies the maintenance
 evaluation surface that any detector family should face: chronological splits,
@@ -175,16 +175,12 @@ The study is guided by four research questions:
   service-level maintenance events are defined?
 \end{description}
 
-The article makes four framework and artifact contributions:
+The article makes three framework contributions:
 
 \begin{enumerate}
   \item \emph{MAINT-VD}, a focused maintenance-evaluation framework organized
   around four reusable checks: chronological testing, project-held-out testing,
   independent-clean specificity, and operating-point sweeps.
-  \item A replication artifact package that operationalizes the framework with
-  temporal dataset exports, recovered commit-date mappings, split manifests,
-  model outputs, operating-point curves, policy summaries, statistical tables,
-  and an artifact manifest with checksums.
   \item Three instantiated evaluation cases with reusable validity controls: a
   corrected temporal CVEfixes pre/post-fix study, a recovered-date DiverseVul
   sensitivity study, and a true-dated PrimeVul-paired sensitivity study, each
@@ -1721,9 +1717,9 @@ not establish causality.
 
 \section{Conclusion}
 
-This article contributed MAINT-VD, a maintenance-evaluation framework and
-artifact package for studying learning-based vulnerability detectors as
-maintained software artifacts. A deployed detector has a lifecycle: it is
+This article introduced MAINT-VD, a maintenance-evaluation framework for
+studying learning-based vulnerability detectors as maintained software
+artifacts. A deployed detector has a lifecycle: it is
 trained on historical projects, calibrated on a validation set, operated at a
 chosen threshold, monitored against future code, and periodically refreshed or
 revalidated as the surrounding software ecosystem changes. Treating these
