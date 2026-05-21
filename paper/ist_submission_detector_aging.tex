@@ -113,6 +113,11 @@ dependency interfaces evolve; vulnerability taxonomies and disclosure practices
 shift; and the projects seen after deployment may differ from those that
 produced the training labels. Even if model weights remain fixed, the threshold
 can become inappropriate as class priors and false-positive costs change.
+We use \emph{project shift} for this project-level change in the evaluation
+population: a detector trained on historical functions from one set of
+repositories may later be applied to different repositories, or to a different
+mixture of repositories, with different APIs, naming conventions, file
+structures, vulnerability types, and fix styles.
 
 This mismatch matters in practice. A detector with high recall but poor
 specificity can flood developers with alerts and lose trust. A detector tuned
