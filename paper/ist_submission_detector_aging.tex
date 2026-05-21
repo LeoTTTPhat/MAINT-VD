@@ -145,21 +145,21 @@ and false-positive rate even when the model scores are unchanged.
     {\textbf{Future stream}\\new repositories\\new label mix};
   \draw[arrow] (origin) -- (future);
 
-  \node[signal] (project) at (-1.75,-2.65)
+  \node[signal] (project) at (-1.75,-3.00)
     {\textbf{Project shift}\\repositories, APIs,\\coding conventions};
-  \node[signal] (label) at (1.75,-2.65)
+  \node[signal] (label) at (1.75,-3.00)
     {\textbf{Label shift}\\vulnerable ratio, CWE mix,\\clean-code source};
-  \node[signal] (token) at (-1.75,-4.0)
+  \node[signal] (token) at (-1.75,-4.35)
     {\textbf{Vocabulary/style shift}\\tokens, identifiers,\\function length};
-  \node[signal] (op) at (1.75,-4.0)
+  \node[signal] (op) at (1.75,-4.35)
     {\textbf{Operating point}\\decision threshold\\recall--FPR tradeoff};
 
-  \draw[arrow] (future.south) -- ++(0,-0.35) -| (project.north);
-  \draw[arrow] (future.south) -- ++(0,-0.35) -| (label.north);
+  \draw[arrow] (future.south) -- ++(0,-0.60) -| (project.north);
+  \draw[arrow] (future.south) -- ++(0,-0.60) -| (label.north);
   \draw[arrow] (project.south) -- (token.north);
   \draw[arrow] (label.south) -- (op.north);
 
-  \node[shiftbox, fill=green!8] (service) at (0,-5.35)
+  \node[shiftbox, fill=green!8] (service) at (0,-5.70)
     {\textbf{Service behavior}\\recall, precision, specificity, FPR};
   \draw[arrow] (token.south) |- (service.west);
   \draw[arrow] (op.south) |- (service.east);
