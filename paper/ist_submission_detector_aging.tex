@@ -145,6 +145,23 @@ versions as negative examples. DiverseVul provides sensitivity evidence after
 enrichment with repository commit dates from the official metadata; rows whose
 dates cannot be recovered are excluded from recovered-date temporal claims.
 
+The four checks are intentionally concrete. \emph{Chronological testing} trains
+only on past code and evaluates on later years; for example, a detector trained
+on 2010--2016 CVEfixes records is tested on 2018--2024 records without seeing
+future labels. \emph{Project-held-out testing} adds a deployment-style
+constraint: future examples from projects already seen during training are
+removed, so a model trained on historical functions from one project cannot
+receive credit for later functions from that same project. \emph{Independent-clean
+specificity} asks whether a detector that separates vulnerable and fixed
+versions also avoids flagging clean functions collected outside vulnerability
+fixing commits; for example, repository-clean C/C++ functions are used to
+measure how often a CVEfixes-trained model raises false alarms on code that is
+not constructed as a fixed-code negative. \emph{Operating-point sweeps} report
+recall, precision, F1, specificity, and false-positive rate across thresholds
+rather than at one F1-optimized threshold; for example, a threshold that
+maximizes recall may be contrasted with one constrained to validation FPR
+\(\leq 0.20\).
+
 The study is guided by four research questions:
 
 \begin{description}
