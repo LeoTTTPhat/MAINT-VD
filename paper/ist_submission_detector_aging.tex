@@ -129,8 +129,11 @@ and \emph{length or style shift} denotes changes in function size or code
 structure. An \emph{operating point} is the decision threshold at which a
 detector is run; changing it can trade recall against precision, specificity,
 and false-positive rate even when the model scores are unchanged.
+Figure~\ref{fig:shift-terminology} summarizes how these shifts connect the
+training origin to future service behavior.
 
-\begin{center}
+\begin{figure}
+\centering
 \begin{tikzpicture}[
   font=\scriptsize,
   shiftbox/.style={draw, rounded corners=2pt, align=center,
@@ -164,11 +167,11 @@ and false-positive rate even when the model scores are unchanged.
   \draw[arrow] (token.south) -- ([xshift=-1.05cm]service.north);
   \draw[arrow] (op.south) -- ([xshift=1.05cm]service.north);
 \end{tikzpicture}
-\par\smallskip
-\footnotesize\textbf{Shift terminology at a glance.} Future detector behavior
-depends on who writes the code, what labels are observed, how code changes, and
-where the decision threshold is set.
-\end{center}
+\caption{Shift terminology at a glance. Future detector behavior depends on who
+writes the code, what labels are observed, how code changes, and where the
+decision threshold is set.}
+\label{fig:shift-terminology}
+\end{figure}
 
 This mismatch matters in practice. A detector with high recall but poor
 specificity can flood developers with alerts and lose trust. A detector tuned
