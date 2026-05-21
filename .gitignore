@@ -10,6 +10,8 @@ data/
 results/
 
 # LaTeX build products.
+paper/*.tex
+paper/*.pdf
 paper/*.abs
 paper/*.aux
 paper/*.bbl
